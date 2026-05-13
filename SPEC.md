@@ -86,7 +86,13 @@ All subcommands that take `<vm>` accept it as a positional. If omitted, the
 - Schema:
   ```toml
   default_vm = "ubuntu-2404"
+
+  [vms.ubuntu-2404]
+  gui = false
   ```
+  `vms.<name>.gui` records the `--gui` choice from `rusta create`. Used
+  by `rusta up` to pick the default boot mode (§4.1). VMs created before
+  this feature have no `[vms.<name>]` entry and default to headless boot.
 
 ### 3.2 Resolution rule
 
@@ -146,16 +152,23 @@ Notes:
 
 ## 4. Subcommand details
 
-### 4.1 `rusta up [<vm>] [--graphical]`
+### 4.1 `rusta up [<vm>] [--graphical|-G|--graphics|--gui] [--no-gui|--no-graphics]`
 
 Boot a VM.
 
 - Resolves `<vm>` per §3.
 - If the VM is already running, prints `[skip]` and exits 0.
-- Default: headless (`tart run <vm> --no-graphics`), backgrounded with the
-  PID written to `~/.local/share/rusta/run/<vm>.pid` so subsequent commands
-  can find it.
-- `--graphical` (alias `-G`): run with a graphics window (no `--no-graphics`).
+- Boot mode follows the VM's `create`-time choice: VMs created with
+  `--gui` boot with a graphics window; all others boot headless
+  (`tart run <vm> --no-graphics`). VMs created before this feature have
+  no recorded preference and default to headless.
+- `--graphical` (aliases: `-G`, `--graphics`, `--gui`): force a graphics
+  window, regardless of the recorded preference.
+- `--no-gui` (alias: `--no-graphics`): force headless boot, even for
+  GUI-enabled VMs.
+- `--graphical` and `--no-gui` are mutually exclusive.
+- Backgrounded with the PID written to `~/.local/share/rusta/run/<vm>.pid`
+  so subsequent commands can find it.
 - Waits for the **tart guest agent** (`tart exec <vm> true`, poll 2s × 60).
 - Prints the guest IP once available (best-effort; not fatal if delayed).
 - Does **not** re-run provisioning; that only happens during `create`.
@@ -494,7 +507,15 @@ A working `rusta` should pass each of these end-to-end:
     headlessly; second invocation is a `[skip]`.
 12. `rusta up lab` (explicit name) → boots `lab` regardless of default;
     `state.default_vm` is **unchanged**.
-13. `rusta up lab --graphical` → boots `lab` with a graphics window.
+13. Boot-mode defaults track the `create`-time `--gui` choice:
+    - `rusta create lab` then `rusta up lab` → boots headless.
+    - `rusta create lab --gui` then `rusta up lab` → boots with a
+      graphics window with no explicit flag.
+    - `rusta up lab --no-gui` (or `--no-graphics`) on a GUI-enabled VM →
+      boots headless for that invocation.
+    - `rusta up lab --graphical` (or `-G` / `--graphics` / `--gui`) on a
+      headless VM → boots with a graphics window for that invocation.
+    - `rusta up lab --graphical --no-gui` → exits 1 (mutually exclusive).
 14. `rusta down` → graceful shutdown of the default VM within 60s; second
     invocation is `[skip]`. Picker triggers if no default is set.
 15. `rusta down lab --force` → hard-stops `lab` even if guest agent is

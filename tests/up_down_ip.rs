@@ -33,6 +33,81 @@ fn up_with_graphical_flag_runs() {
     let out = h.run(&["up", "lab", "--graphical"]);
     assert_eq!(code(&out), 0);
     assert_eq!(h.vm_state("lab").as_deref(), Some("running"));
+    let argv = h.last_run_args().expect("run logged");
+    assert!(!argv.iter().any(|a| a == "--no-graphics"), "argv: {argv:?}");
+}
+
+#[test]
+fn up_unknown_vm_defaults_to_headless() {
+    // No `[vms.lab]` entry in state.toml → default to headless.
+    let h = Harness::new();
+    h.add_vm("lab", "stopped");
+    let out = h.run(&["up", "lab"]);
+    assert_eq!(code(&out), 0);
+    let argv = h.last_run_args().expect("run logged");
+    assert!(argv.iter().any(|a| a == "--no-graphics"), "argv: {argv:?}");
+}
+
+#[test]
+fn up_after_create_with_gui_defaults_to_graphical() {
+    let h = Harness::new();
+    let out = h.run(&["create", "lab", "--gui"]);
+    assert_eq!(code(&out), 0);
+    let out = h.run(&["up", "lab"]);
+    assert_eq!(code(&out), 0);
+    let argv = h.last_run_args().expect("run logged");
+    assert!(!argv.iter().any(|a| a == "--no-graphics"), "argv: {argv:?}");
+}
+
+#[test]
+fn up_after_create_without_gui_defaults_to_headless() {
+    let h = Harness::new();
+    let out = h.run(&["create", "lab"]);
+    assert_eq!(code(&out), 0);
+    let out = h.run(&["up", "lab"]);
+    assert_eq!(code(&out), 0);
+    let argv = h.last_run_args().expect("run logged");
+    assert!(argv.iter().any(|a| a == "--no-graphics"), "argv: {argv:?}");
+}
+
+#[test]
+fn up_no_gui_overrides_gui_default() {
+    let h = Harness::new();
+    let out = h.run(&["create", "lab", "--gui"]);
+    assert_eq!(code(&out), 0);
+    let out = h.run(&["up", "lab", "--no-gui"]);
+    assert_eq!(code(&out), 0);
+    let argv = h.last_run_args().expect("run logged");
+    assert!(argv.iter().any(|a| a == "--no-graphics"), "argv: {argv:?}");
+}
+
+#[test]
+fn up_no_graphics_alias_overrides_gui_default() {
+    let h = Harness::new();
+    let out = h.run(&["create", "lab", "--gui"]);
+    assert_eq!(code(&out), 0);
+    let out = h.run(&["up", "lab", "--no-graphics"]);
+    assert_eq!(code(&out), 0);
+    let argv = h.last_run_args().expect("run logged");
+    assert!(argv.iter().any(|a| a == "--no-graphics"), "argv: {argv:?}");
+}
+
+#[test]
+fn up_gui_alias_forces_graphical_on_headless_vm() {
+    let h = Harness::new();
+    h.add_vm("lab", "stopped");
+    let out = h.run(&["up", "lab", "--gui"]);
+    assert_eq!(code(&out), 0);
+    let argv = h.last_run_args().expect("run logged");
+    assert!(!argv.iter().any(|a| a == "--no-graphics"), "argv: {argv:?}");
+}
+
+#[test]
+fn up_graphical_and_no_gui_conflict_exits_nonzero() {
+    let h = Harness::new();
+    h.add_vm("lab", "stopped");
+    let out = h.run(&["up", "lab", "--graphical", "--no-gui"]);
+    assert_ne!(code(&out), 0);
 }
 
 #[test]

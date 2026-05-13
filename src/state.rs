@@ -1,3 +1,4 @@
+use std::collections::BTreeMap;
 use std::path::Path;
 
 use serde::{Deserialize, Serialize};
@@ -8,6 +9,14 @@ use crate::paths;
 pub struct State {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub default_vm: Option<String>,
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    pub vms: BTreeMap<String, VmState>,
+}
+
+#[derive(Debug, Default, Clone, Serialize, Deserialize)]
+pub struct VmState {
+    #[serde(default)]
+    pub gui: bool,
 }
 
 impl State {
@@ -47,6 +56,25 @@ pub fn clear_default_if_matches(vm: &str) -> std::io::Result<()> {
     let mut s = State::load();
     if s.default_vm.as_deref() == Some(vm) {
         s.default_vm = None;
+        s.save()
+    } else {
+        Ok(())
+    }
+}
+
+pub fn set_vm_gui(vm: &str, gui: bool) -> std::io::Result<()> {
+    let mut s = State::load();
+    s.vms.insert(vm.to_string(), VmState { gui });
+    s.save()
+}
+
+pub fn vm_gui(vm: &str) -> Option<bool> {
+    State::load().vms.get(vm).map(|v| v.gui)
+}
+
+pub fn forget_vm(vm: &str) -> std::io::Result<()> {
+    let mut s = State::load();
+    if s.vms.remove(vm).is_some() {
         s.save()
     } else {
         Ok(())
@@ -97,6 +125,39 @@ mod tests {
             assert_eq!(State::load().default_vm.as_deref(), Some("a"));
             clear_default_if_matches("a").unwrap();
             assert!(State::load().default_vm.is_none());
+        });
+    }
+
+    #[test]
+    fn vm_gui_roundtrip() {
+        with_temp_root(|| {
+            assert_eq!(vm_gui("lab"), None);
+            set_vm_gui("lab", true).unwrap();
+            assert_eq!(vm_gui("lab"), Some(true));
+            set_vm_gui("lab", false).unwrap();
+            assert_eq!(vm_gui("lab"), Some(false));
+            forget_vm("lab").unwrap();
+            assert_eq!(vm_gui("lab"), None);
+        });
+    }
+
+    #[test]
+    fn old_schema_without_vms_table_still_loads() {
+        with_temp_root(|| {
+            paths::ensure_dirs().unwrap();
+            std::fs::write(paths::state_file(), b"default_vm = \"hello\"\n").unwrap();
+            let s = State::load();
+            assert_eq!(s.default_vm.as_deref(), Some("hello"));
+            assert!(s.vms.is_empty());
+            assert_eq!(vm_gui("hello"), None);
+        });
+    }
+
+    #[test]
+    fn forget_vm_is_noop_when_absent() {
+        with_temp_root(|| {
+            forget_vm("missing").unwrap();
+            assert!(State::load().vms.is_empty());
         });
     }
 

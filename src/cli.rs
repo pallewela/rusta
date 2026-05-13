@@ -50,9 +50,17 @@ pub enum Command {
 #[derive(Args, Debug)]
 pub struct UpArgs {
     pub vm: Option<String>,
-    /// Run with a graphics window
-    #[arg(long, short = 'G')]
+    /// Force a graphics window (overrides per-VM default)
+    #[arg(
+        long = "graphical",
+        short = 'G',
+        visible_aliases = ["graphics", "gui"],
+        conflicts_with = "no_gui",
+    )]
     pub graphical: bool,
+    /// Force headless boot, even if the VM was created with --gui
+    #[arg(long = "no-gui", visible_alias = "no-graphics")]
+    pub no_gui: bool,
 }
 
 #[derive(Args, Debug)]
@@ -164,6 +172,33 @@ mod tests {
         let Some(Command::Up(a)) = cli.command else { panic!("expected up") };
         assert_eq!(a.vm.as_deref(), Some("lab"));
         assert!(a.graphical);
+        assert!(!a.no_gui);
+    }
+
+    #[test]
+    fn up_graphical_has_aliases() {
+        for flag in ["--graphical", "-G", "--graphics", "--gui"] {
+            let cli = Cli::try_parse_from(["rusta", "up", "lab", flag]).unwrap();
+            let Some(Command::Up(a)) = cli.command else { panic!("expected up: {flag}") };
+            assert!(a.graphical, "{flag} should set graphical");
+            assert!(!a.no_gui, "{flag} should leave no_gui false");
+        }
+    }
+
+    #[test]
+    fn up_no_gui_has_alias() {
+        for flag in ["--no-gui", "--no-graphics"] {
+            let cli = Cli::try_parse_from(["rusta", "up", "lab", flag]).unwrap();
+            let Some(Command::Up(a)) = cli.command else { panic!("expected up: {flag}") };
+            assert!(a.no_gui, "{flag} should set no_gui");
+            assert!(!a.graphical, "{flag} should leave graphical false");
+        }
+    }
+
+    #[test]
+    fn up_graphical_and_no_gui_conflict() {
+        assert!(Cli::try_parse_from(["rusta", "up", "lab", "--graphical", "--no-gui"]).is_err());
+        assert!(Cli::try_parse_from(["rusta", "up", "lab", "--gui", "--no-graphics"]).is_err());
     }
 
     #[test]

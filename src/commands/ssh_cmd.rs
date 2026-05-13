@@ -26,7 +26,11 @@ pub fn run(args: SshArgs) -> Result<u8> {
             )));
         }
         rio::info(&format!("Auto-booting VM '{vm}'..."));
-        crate::commands::up::run(crate::cli::UpArgs { vm: Some(vm.clone()), graphical: false })?;
+        crate::commands::up::run(crate::cli::UpArgs {
+            vm: Some(vm.clone()),
+            graphical: false,
+            no_gui: false,
+        })?;
     }
 
     ensure_sshpass()?;

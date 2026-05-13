@@ -27,6 +27,7 @@ pub fn run(args: DeleteArgs) -> Result<u8> {
 
     tart::delete(&vm)?;
     state::clear_default_if_matches(&vm)?;
+    let _ = state::forget_vm(&vm);
     let _ = std::fs::remove_file(crate::paths::pid_file(&vm));
     rio::ok(&format!("VM '{vm}' deleted"));
     Ok(0)

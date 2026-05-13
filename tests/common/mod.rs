@@ -59,6 +59,15 @@ impl Harness {
         std::fs::write(path, out).unwrap();
     }
 
+    /// Returns the full argv that the fake `tart` last saw for a `tart run …`
+    /// invocation, or `None` if no `tart run` has happened yet in this harness.
+    /// Each line of `run.log` is one whitespace-joined argv (e.g. `run lab --no-graphics`).
+    pub fn last_run_args(&self) -> Option<Vec<String>> {
+        let s = std::fs::read_to_string(self.tart_state.join("run.log")).ok()?;
+        let last = s.lines().filter(|l| !l.is_empty()).last()?;
+        Some(last.split_whitespace().map(str::to_string).collect())
+    }
+
     pub fn vm_state(&self, name: &str) -> Option<String> {
         let s = std::fs::read_to_string(self.tart_state.join("vms.txt")).ok()?;
         for line in s.lines() {
@@ -215,6 +224,7 @@ case "$cmd" in
     vm_set_state "$1" stopped
     ;;
   run)
+    echo "run $*" >> "$S/run.log"
     vm_set_state "$1" running
     ;;
   exec)

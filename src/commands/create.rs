@@ -6,6 +6,7 @@ use crate::error::{Error, Result};
 use crate::io as rio;
 use crate::paths;
 use crate::provision;
+use crate::state;
 use crate::tart;
 
 pub fn run(args: CreateArgs) -> Result<u8> {
@@ -66,6 +67,7 @@ pub fn run(args: CreateArgs) -> Result<u8> {
     let image = format!("ghcr.io/cirruslabs/ubuntu:{}", args.version);
     tart::clone_image(&image, &vm_name)?;
     tart::set_resources(&vm_name, args.cpus, args.memory, args.disk)?;
+    let _ = state::set_vm_gui(&vm_name, args.gui.is_some());
     rio::ok(&format!(
         "VM created: {} ({} CPUs, {} GB RAM, {} GB disk)",
         vm_name,

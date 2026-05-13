@@ -4,6 +4,7 @@ use crate::cli::UpArgs;
 use crate::error::{Error, Result};
 use crate::io as rio;
 use crate::picker;
+use crate::state;
 use crate::tart;
 
 pub fn run(args: UpArgs) -> Result<u8> {
@@ -16,7 +17,13 @@ pub fn run(args: UpArgs) -> Result<u8> {
         return Ok(0);
     }
 
-    let headless = !args.graphical;
+    let headless = if args.no_gui {
+        true
+    } else if args.graphical {
+        false
+    } else {
+        !state::vm_gui(&vm).unwrap_or(false)
+    };
     if headless {
         rio::info(&format!("Starting VM '{vm}' headlessly..."));
     } else {

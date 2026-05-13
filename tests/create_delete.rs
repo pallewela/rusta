@@ -73,6 +73,37 @@ fn create_with_gui_works() {
 }
 
 #[test]
+fn create_with_gui_records_state() {
+    let h = Harness::new();
+    let out = h.run(&["create", "lab", "--gui"]);
+    assert_eq!(code(&out), 0, "stderr: {}", stderr(&out));
+    let s = std::fs::read_to_string(h.state_root.join("state.toml")).unwrap();
+    assert!(s.contains("[vms.lab]"), "state.toml: {s}");
+    assert!(s.contains("gui = true"), "state.toml: {s}");
+}
+
+#[test]
+fn create_without_gui_records_false() {
+    let h = Harness::new();
+    let out = h.run(&["create", "lab"]);
+    assert_eq!(code(&out), 0, "stderr: {}", stderr(&out));
+    let s = std::fs::read_to_string(h.state_root.join("state.toml")).unwrap();
+    assert!(s.contains("[vms.lab]"), "state.toml: {s}");
+    assert!(s.contains("gui = false"), "state.toml: {s}");
+}
+
+#[test]
+fn delete_removes_vm_state_entry() {
+    let h = Harness::new();
+    let out = h.run(&["create", "lab", "--gui"]);
+    assert_eq!(code(&out), 0);
+    let out = h.run(&["delete", "lab", "--yes"]);
+    assert_eq!(code(&out), 0);
+    let s = std::fs::read_to_string(h.state_root.join("state.toml")).unwrap_or_default();
+    assert!(!s.contains("[vms.lab]"), "state.toml still has entry: {s}");
+}
+
+#[test]
 fn create_with_invalid_gui_errors() {
     let h = Harness::new();
     let out = h.run(&["create", "lab", "--gui", "kde-desktop"]);
