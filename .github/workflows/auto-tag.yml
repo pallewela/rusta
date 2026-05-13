@@ -25,6 +25,7 @@ jobs:
         with:
           ref: ${{ github.event.workflow_run.head_sha }}
           fetch-depth: 0
+          token: ${{ secrets.RELEASE_PAT }}
 
       - name: Find latest version tag
         id: latest
@@ -37,16 +38,8 @@ jobs:
 
       - name: Determine bump level
         id: bump
-        env:
-          PREV_TAG: ${{ steps.latest.outputs.tag }}
         run: |
           set -euo pipefail
-          if [ "$PREV_TAG" = "v0.0.0" ]; then
-            RANGE="HEAD"
-          else
-            RANGE="${PREV_TAG}..HEAD"
-          fi
-          MSGS=$(git log --format=%B "$RANGE" || true)
           HEAD_MSG=$(git log -1 --format=%B)
 
           if echo "$HEAD_MSG" | grep -qiE '\[skip release\]'; then
@@ -55,10 +48,14 @@ jobs:
             exit 0
           fi
 
+          # Scan only the head commit so each commit declares its own bump
+          # intent. Scanning the full range since the previous tag is too
+          # easy to fool: documentation prose in an earlier commit can
+          # accidentally match the major/minor markers.
           LEVEL=patch
-          if echo "$MSGS" | grep -qE '\[bump:major\]|BREAKING CHANGE'; then
+          if echo "$HEAD_MSG" | grep -qE '\[bump:major\]|BREAKING CHANGE'; then
             LEVEL=major
-          elif echo "$MSGS" | grep -qE '\[bump:minor\]'; then
+          elif echo "$HEAD_MSG" | grep -qE '\[bump:minor\]'; then
             LEVEL=minor
           fi
           echo "level=$LEVEL" >> "$GITHUB_OUTPUT"
