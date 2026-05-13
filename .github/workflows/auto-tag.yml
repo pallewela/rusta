@@ -1,0 +1,99 @@
+name: Auto-tag
+
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: auto-tag
+  cancel-in-progress: false
+
+jobs:
+  tag:
+    if: >-
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'push'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          fetch-depth: 0
+
+      - name: Find latest version tag
+        id: latest
+        run: |
+          set -euo pipefail
+          TAG=$(git tag --list 'v[0-9]*.[0-9]*.[0-9]*' --sort=-v:refname | head -n1)
+          [ -n "$TAG" ] || TAG="v0.0.0"
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "Previous tag: $TAG"
+
+      - name: Determine bump level
+        id: bump
+        env:
+          PREV_TAG: ${{ steps.latest.outputs.tag }}
+        run: |
+          set -euo pipefail
+          if [ "$PREV_TAG" = "v0.0.0" ]; then
+            RANGE="HEAD"
+          else
+            RANGE="${PREV_TAG}..HEAD"
+          fi
+          MSGS=$(git log --format=%B "$RANGE" || true)
+          HEAD_MSG=$(git log -1 --format=%B)
+
+          if echo "$HEAD_MSG" | grep -qiE '\[skip release\]'; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            echo "Head commit requests [skip release]; not tagging."
+            exit 0
+          fi
+
+          LEVEL=patch
+          if echo "$MSGS" | grep -qE '\[bump:major\]|BREAKING CHANGE'; then
+            LEVEL=major
+          elif echo "$MSGS" | grep -qE '\[bump:minor\]'; then
+            LEVEL=minor
+          fi
+          echo "level=$LEVEL" >> "$GITHUB_OUTPUT"
+          echo "skip=false" >> "$GITHUB_OUTPUT"
+          echo "Bump level: $LEVEL"
+
+      - name: Compute next version
+        if: steps.bump.outputs.skip != 'true'
+        id: next
+        env:
+          PREV_TAG: ${{ steps.latest.outputs.tag }}
+          LEVEL: ${{ steps.bump.outputs.level }}
+        run: |
+          set -euo pipefail
+          V="${PREV_TAG#v}"
+          MAJ="${V%%.*}"
+          REST="${V#*.}"
+          MIN="${REST%%.*}"
+          PAT="${REST#*.}"
+          case "$LEVEL" in
+            major) MAJ=$((MAJ+1)); MIN=0; PAT=0 ;;
+            minor) MIN=$((MIN+1)); PAT=0 ;;
+            patch) PAT=$((PAT+1)) ;;
+          esac
+          NEW="v${MAJ}.${MIN}.${PAT}"
+          echo "tag=$NEW" >> "$GITHUB_OUTPUT"
+          echo "Next tag: $NEW"
+
+      - name: Push tag
+        if: steps.bump.outputs.skip != 'true'
+        env:
+          NEW_TAG: ${{ steps.next.outputs.tag }}
+        run: |
+          set -euo pipefail
+          git config user.name  'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git tag -a "$NEW_TAG" -m "$NEW_TAG"
+          git push origin "$NEW_TAG"

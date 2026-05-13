@@ -24,8 +24,15 @@ jobs:
 
       - uses: Swatinem/rust-cache@v2
 
+      - name: Sync Cargo.toml version to tag
+        run: |
+          set -euo pipefail
+          VERSION="${GITHUB_REF_NAME#v}"
+          sed -i.bak -E "s/^version = \".*\"/version = \"${VERSION}\"/" Cargo.toml
+          rm Cargo.toml.bak
+
       - name: Build release binary
-        run: cargo build --release --locked
+        run: cargo build --release
 
       - name: Package tarball
         id: pkg
