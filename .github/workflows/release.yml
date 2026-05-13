@@ -1,0 +1,94 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  release:
+    name: Build & publish (macOS arm64)
+    runs-on: macos-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - uses: Swatinem/rust-cache@v2
+
+      - name: Build release binary
+        run: cargo build --release --locked
+
+      - name: Package tarball
+        id: pkg
+        run: |
+          set -euo pipefail
+          TAG="${GITHUB_REF_NAME}"
+          ARCHIVE="rusta-${TAG}-aarch64-apple-darwin.tar.gz"
+          tar -C target/release -czf "${ARCHIVE}" rusta
+          SHA256="$(shasum -a 256 "${ARCHIVE}" | awk '{print $1}')"
+          {
+            echo "archive=${ARCHIVE}"
+            echo "sha256=${SHA256}"
+            echo "tag=${TAG}"
+          } >> "${GITHUB_OUTPUT}"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ steps.pkg.outputs.archive }}
+          generate_release_notes: true
+          body: |
+            ## Install via Homebrew
+
+            ```sh
+            brew install pallewela/tap/rusta
+            ```
+
+            ## Manual install
+
+            ```sh
+            curl -L https://github.com/${{ github.repository }}/releases/download/${{ steps.pkg.outputs.tag }}/${{ steps.pkg.outputs.archive }} -o rusta.tar.gz
+            tar -xzf rusta.tar.gz
+            install -m 0755 rusta /usr/local/bin/rusta
+            ```
+
+            **SHA256** (`${{ steps.pkg.outputs.archive }}`):
+            ```
+            ${{ steps.pkg.outputs.sha256 }}
+            ```
+
+      - name: Check tap token presence
+        id: tap
+        env:
+          TAP_REPO_TOKEN: ${{ secrets.TAP_REPO_TOKEN }}
+        run: |
+          if [ -n "${TAP_REPO_TOKEN:-}" ]; then
+            echo "present=true" >> "${GITHUB_OUTPUT}"
+          else
+            echo "present=false" >> "${GITHUB_OUTPUT}"
+            echo "TAP_REPO_TOKEN secret is not set; skipping Homebrew tap bump." >&2
+          fi
+
+      - name: Bump Homebrew tap formula
+        if: steps.tap.outputs.present == 'true'
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.TAP_REPO_TOKEN }}
+          repository: pallewela/homebrew-tap
+          event-type: rusta-release
+          client-payload: |
+            {
+              "tag": "${{ steps.pkg.outputs.tag }}",
+              "archive": "${{ steps.pkg.outputs.archive }}",
+              "sha256": "${{ steps.pkg.outputs.sha256 }}",
+              "url": "https://github.com/${{ github.repository }}/releases/download/${{ steps.pkg.outputs.tag }}/${{ steps.pkg.outputs.archive }}"
+            }

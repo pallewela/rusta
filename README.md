@@ -14,18 +14,48 @@ A macOS-only CLI for creating and managing Ubuntu VMs on Apple Silicon using [Ta
 
 ## Install
 
-Build from source with Cargo:
+### Homebrew (recommended)
+
+```sh
+brew install pallewela/tap/rusta
+```
+
+This installs the latest prebuilt `aarch64-apple-darwin` binary from the
+[GitHub Releases](https://github.com/pallewela/rusta/releases) page.
+Upgrades land via `brew upgrade rusta`.
+
+### Manual download
+
+Grab the tarball for the release you want from
+[GitHub Releases](https://github.com/pallewela/rusta/releases), then:
+
+```sh
+tar -xzf rusta-vX.Y.Z-aarch64-apple-darwin.tar.gz
+install -m 0755 rusta /usr/local/bin/rusta
+```
+
+Each release page lists the SHA256 of the tarball; verify with
+`shasum -a 256` before installing.
+
+### From source
 
 ```sh
 cargo install --path .
+# or
+cargo install --git https://github.com/pallewela/rusta
 ```
 
-Or build a release binary and copy it onto your `PATH`:
+## Releasing
 
-```sh
-cargo build --release
-cp target/release/rusta /usr/local/bin/
-```
+Maintainer notes for cutting a new release:
+
+1. Bump `version` in `Cargo.toml` (e.g. `0.2.0`), commit as `chore: release v0.2.0`.
+2. `git tag v0.2.0 && git push --tags`.
+3. The `Release` workflow (`.github/workflows/release.yml`) builds on
+   `macos-latest`, attaches `rusta-v0.2.0-aarch64-apple-darwin.tar.gz` to a
+   GitHub Release, and (when the `TAP_REPO_TOKEN` secret is configured)
+   dispatches a `rusta-release` event to `pallewela/homebrew-tap` so the
+   Formula picks up the new version and sha256 automatically.
 
 ## Quick start
 
