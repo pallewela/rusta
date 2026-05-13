@@ -1,3 +1,4 @@
+use std::io::{BufRead, IsTerminal, Write};
 use std::time::Duration;
 
 use crate::cli::CreateArgs;
@@ -17,10 +18,25 @@ pub fn run(args: CreateArgs) -> Result<u8> {
         }
     }
 
-    let vm_name = args
-        .vm
-        .clone()
-        .unwrap_or_else(|| format!("ubuntu-{}", args.version.replace('.', "")));
+    let suggested = format!("ubuntu-{}", args.version.replace('.', ""));
+    let vm_name = match args.vm.clone() {
+        Some(n) => n,
+        None => {
+            if !std::io::stdin().is_terminal() {
+                return Err(Error::msg(format!(
+                    "VM name is required for `rusta create` in non-interactive contexts. \
+                     Pass a name on the command line (e.g. `rusta create {suggested}`)."
+                )));
+            }
+            let picked = prompt_for_name(
+                &suggested,
+                &mut std::io::stdin().lock(),
+                &mut std::io::stdout(),
+            )?;
+            validate_name_opt(Some(&picked))?;
+            picked
+        }
+    };
 
     let variant = if args.gui.is_some() { "desktop" } else { "server" };
     println!();
@@ -126,6 +142,30 @@ pub fn run(args: CreateArgs) -> Result<u8> {
     Ok(0)
 }
 
+/// Interactively prompt for a VM name, offering `suggested` as the default.
+/// An empty line accepts the suggestion; EOF aborts.
+pub(crate) fn prompt_for_name<R: BufRead, W: Write>(
+    suggested: &str,
+    input: &mut R,
+    out: &mut W,
+) -> Result<String> {
+    write!(out, "VM name [{suggested}]: ").map_err(|e| Error::msg(e.to_string()))?;
+    out.flush().ok();
+    let mut buf = String::new();
+    let n = input
+        .read_line(&mut buf)
+        .map_err(|e| Error::msg(e.to_string()))?;
+    if n == 0 {
+        return Err(Error::msg("aborted: no VM name provided".to_string()));
+    }
+    let trimmed = buf.trim();
+    if trimmed.is_empty() {
+        Ok(suggested.to_string())
+    } else {
+        Ok(trimmed.to_string())
+    }
+}
+
 pub(crate) fn validate_name_opt(name: Option<&str>) -> Result<()> {
     let Some(name) = name else { return Ok(()) };
     let first_ok = name
@@ -177,5 +217,41 @@ mod tests {
     #[test]
     fn none_name_is_ok() {
         assert!(validate_name_opt(None).is_ok());
+    }
+
+    fn ask(input: &str, suggested: &str) -> Result<String> {
+        let mut out = Vec::<u8>::new();
+        let mut reader = std::io::Cursor::new(input.as_bytes().to_vec());
+        prompt_for_name(suggested, &mut reader, &mut out)
+    }
+
+    #[test]
+    fn prompt_empty_line_accepts_suggested() {
+        assert_eq!(ask("\n", "ubuntu-2404").unwrap(), "ubuntu-2404");
+    }
+
+    #[test]
+    fn prompt_explicit_name_overrides_suggested() {
+        assert_eq!(ask("lab\n", "ubuntu-2404").unwrap(), "lab");
+    }
+
+    #[test]
+    fn prompt_trims_whitespace() {
+        assert_eq!(ask("  lab  \n", "ubuntu-2404").unwrap(), "lab");
+    }
+
+    #[test]
+    fn prompt_eof_aborts() {
+        let err = ask("", "ubuntu-2404").unwrap_err();
+        assert!(err.message.contains("aborted"));
+    }
+
+    #[test]
+    fn prompt_renders_suggested_in_brackets() {
+        let mut out = Vec::<u8>::new();
+        let mut reader = std::io::Cursor::new(b"\n".to_vec());
+        prompt_for_name("ubuntu-2204", &mut reader, &mut out).unwrap();
+        let text = String::from_utf8(out).unwrap();
+        assert!(text.contains("[ubuntu-2204]"));
     }
 }

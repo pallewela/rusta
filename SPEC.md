@@ -135,9 +135,9 @@ The default is set only by these explicit paths — never as a side effect of
 
 Notes:
 
-- `rusta create <vm>` and `rusta create` (synthesizing a name from
-  `--version`) both **leave the default untouched**. The next argument-less
-  command that needs a VM triggers the picker.
+- `rusta create <vm>` and `rusta create` (which interactively prompts for
+  a name — see §4.3) both **leave the default untouched**. The next
+  argument-less command that needs an existing VM triggers the picker.
 - `rusta default` with no argument prints the currently-set default, or
   prints "no default set" and exits 1 if none is set. It never prompts.
 - `rusta delete <vm>` clears the default if it pointed at the deleted VM.
@@ -193,24 +193,40 @@ Flags:
 | `--ssh-copy-keys`       | off              | After provisioning, copy host SSH keys into the guest (see §4.10).            |
 | `--debug-no-headless`   | off              | Run with a graphics window during provisioning (debug only).                  |
 
-Positional `<vm>` is the VM name. If omitted, defaults to
-`ubuntu-<UBUNTU_VERSION_NODOT>` (e.g. `--version 22.04` → `ubuntu-2204`).
+Positional `<vm>` is the VM name. **`rusta create` never assumes a name**:
+the default-VM mechanism (§3) does not apply, since `create` is producing a
+new VM, not selecting an existing one. If `<vm>` is omitted:
+
+- If stdin is a TTY, **interactively prompt** for the name, offering
+  `ubuntu-<UBUNTU_VERSION_NODOT>` (e.g. `--version 22.04` → `ubuntu-2204`)
+  as a suggested default the user can accept with an empty line:
+  ```
+  VM name [ubuntu-2404]:
+  ```
+  Ctrl-C or EOF aborts with exit 1 and creates nothing.
+- If stdin is **not** a TTY, exit 1 with a message instructing the caller
+  to pass the VM name on the command line. `create` never proceeds with a
+  silently-synthesized name.
+
 Name must match `^[a-zA-Z0-9][a-zA-Z0-9._-]*$`.
 
 Behavior:
 
 1. Validate platform/prereqs (arm64, brew, tart auto-install).
-2. If the VM name already exists, **skip creation** and print a recreate
+2. Resolve the VM name per the rule above (explicit arg or interactive
+   prompt). The chosen name is **not** written to `state.default_vm`.
+3. If the VM name already exists, **skip creation** and print a recreate
    hint (`rusta delete <vm> && rusta create <vm> ...`); no re-provisioning.
-3. Otherwise:
+4. Otherwise:
    - `tart clone ghcr.io/cirruslabs/ubuntu:<version> <vm>`.
    - `tart set <vm> --cpu <n> --memory <mb> --disk-size <gb>`.
    - Generate `~/.local/share/rusta/provision/<vm>.sh` (kept for debugging).
    - Boot headlessly (or with window under `--debug-no-headless`).
    - Wait for guest agent; upload + execute provisioning script via
      `tart exec`; shut down cleanly. See §5 for the provisioning behavior.
-4. **Does not** modify `state.default_vm` (see §3.4).
-5. If `--ssh-copy-keys`, run the `ssh-copy` flow against the new VM (§4.10),
+5. **Does not** modify `state.default_vm` (see §3.4) — even when the name
+   came from the interactive prompt.
+6. If `--ssh-copy-keys`, run the `ssh-copy` flow against the new VM (§4.10),
    which transiently boots it again.
 
 ### 4.4 `rusta delete <vm> [--yes]`
@@ -454,10 +470,13 @@ A working `rusta` should pass each of these end-to-end:
 1. `rusta` (no args) → top-level help, exit 0.
 2. `rusta --help` and `rusta <cmd> --help` → command-specific help, exit 0.
 3. `rusta versions` → lists tags from ghcr.io, `24.04` flagged `(default)`.
-4. `rusta create` → creates `ubuntu-2404` with 6 CPU / 8 GB / 80 GB, boots,
-   provisions SPICE tools, shuts down. `state.default_vm` is **unchanged**.
+4. `rusta create` (interactive, TTY stdin) → prompts `VM name [ubuntu-2404]:`;
+   accepting the suggestion creates `ubuntu-2404` with 6 CPU / 8 GB / 80 GB,
+   boots, provisions SPICE tools, shuts down. Non-TTY stdin → exits 1
+   without creating anything, instructing the caller to pass the VM name.
+   `state.default_vm` is **unchanged** in both branches.
 5. `rusta create --version 22.04 lab` → creates `lab` from `:22.04`.
-   `state.default_vm` is **unchanged**.
+   `state.default_vm` is **unchanged**, even when a different default is set.
 6. `rusta create --gui` / `--gui xubuntu-desktop` → installs the matching
    desktop and display manager with the NetworkManager workaround. Works
    for **every** Ubuntu version exposed by `rusta versions`, including

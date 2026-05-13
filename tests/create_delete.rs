@@ -1,17 +1,48 @@
 mod common;
+use std::io::Write;
+use std::process::Stdio;
+
 use common::{code, stderr, stdout, Harness};
 
 #[test]
-fn create_defaults_to_ubuntu_2404() {
+fn create_without_name_in_non_tty_errors() {
     let h = Harness::new();
+    // Test subprocess stdin is a pipe (not a TTY): create must refuse to
+    // synthesize a name and exit 1 with a helpful message.
     let out = h.run(&["create"]);
+    assert_eq!(code(&out), 1);
+    assert!(stderr(&out).contains("VM name is required"));
+    assert!(h.vm_state("ubuntu-2404").is_none(), "must not create");
+}
+
+#[test]
+fn create_with_explicit_name_creates_it() {
+    let h = Harness::new();
+    let out = h.run(&["create", "ubuntu-2404"]);
     assert_eq!(code(&out), 0, "stderr: {}", stderr(&out));
     assert_eq!(h.vm_state("ubuntu-2404").as_deref(), Some("stopped"));
-    // Provisioning script was generated.
-    assert!(h
-        .state_root
-        .join("provision/ubuntu-2404.sh")
-        .exists());
+    assert!(h.state_root.join("provision/ubuntu-2404.sh").exists());
+}
+
+#[test]
+fn create_without_name_aborts_on_eof_via_stdin_pipe() {
+    // Even when stdin is piped (so the non-TTY guard fires first), we should
+    // not synthesize a name silently. The TTY branch is exercised by the
+    // unit tests for `prompt_for_name`.
+    let h = Harness::new();
+    let mut child = h
+        .cmd(&["create"])
+        .stdin(Stdio::piped())
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .spawn()
+        .unwrap();
+    if let Some(mut s) = child.stdin.take() {
+        let _ = s.write_all(b"\n");
+    }
+    let out = child.wait_with_output().unwrap();
+    assert_eq!(code(&out), 1);
+    assert!(h.vm_state("ubuntu-2404").is_none());
 }
 
 #[test]
@@ -60,7 +91,7 @@ fn create_with_invalid_name_errors() {
 #[test]
 fn create_does_not_set_default() {
     let h = Harness::new();
-    let _ = h.run(&["create"]);
+    let _ = h.run(&["create", "lab"]);
     let out = h.run(&["default"]);
     assert_eq!(code(&out), 1);
 }
