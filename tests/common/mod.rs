@@ -238,6 +238,13 @@ case "$cmd" in
       vm="$1"
       shift
     fi
+    cur_state=""
+    while IFS=' ' read -r n st; do
+      if [ "$n" = "$vm" ]; then cur_state="$st"; break; fi
+    done < "$LIST"
+    if [ "$cur_state" != "running" ]; then
+      exit 1
+    fi
     if printf '%s\n' "$@" | grep -q shutdown; then
       vm_set_state "$vm" stopped
     fi
