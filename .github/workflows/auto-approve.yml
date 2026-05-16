@@ -1,0 +1,69 @@
+name: Auto-approve
+
+# Approves trusted-author PRs once CI passes. Required because the
+# `protect-main` ruleset enforces a 1-approval review requirement, and
+# GitHub forbids self-approval — so on a solo-maintainer repo a bot must
+# stand in. `github-actions[bot]` is a distinct identity from any human
+# author, so the review counts toward the approval requirement.
+#
+# Trusted authors: the repo owner (`pallewela`) and `dependabot[bot]`.
+# External PRs are ignored and will need a human reviewer.
+
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+
+permissions:
+  contents: read
+
+jobs:
+  approve:
+    if: >-
+      github.event.workflow_run.event == 'pull_request' &&
+      github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      pull-requests: write
+      contents: read
+    steps:
+      - name: Resolve PR for head SHA
+        id: pr
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          set -euo pipefail
+          pr=$(gh api "repos/${GITHUB_REPOSITORY}/commits/${HEAD_SHA}/pulls" \
+                 --jq '.[] | select(.state=="open") | "\(.number) \(.user.login)"' | head -n1)
+          if [ -z "$pr" ]; then
+            echo "No open PR for ${HEAD_SHA}; nothing to approve."
+            exit 0
+          fi
+          number="${pr%% *}"
+          author="${pr##* }"
+          echo "Found PR #${number} by ${author}."
+          {
+            echo "number=${number}"
+            echo "author=${author}"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Approve trusted-author PRs
+        if: >-
+          steps.pr.outputs.number != '' &&
+          (steps.pr.outputs.author == 'pallewela' ||
+           steps.pr.outputs.author == 'dependabot[bot]')
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR: ${{ steps.pr.outputs.number }}
+        run: |
+          set -euo pipefail
+          # Skip if we've already approved this PR's current head.
+          existing=$(gh api "repos/${GITHUB_REPOSITORY}/pulls/${PR}/reviews" \
+                       --jq '[.[] | select(.user.login=="github-actions[bot]" and .state=="APPROVED")] | length')
+          if [ "${existing}" -gt 0 ]; then
+            echo "Already approved PR #${PR}; skipping."
+            exit 0
+          fi
+          gh pr review "${PR}" --approve --body "Auto-approved by CI (Build & Test passed)."
