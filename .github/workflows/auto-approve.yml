@@ -66,4 +66,4 @@ jobs:
             echo "Already approved PR #${PR}; skipping."
             exit 0
           fi
-          gh pr review "${PR}" --approve --body "Auto-approved by CI (Build & Test passed)."
+          gh pr review "${PR}" --repo "${GITHUB_REPOSITORY}" --approve --body "Auto-approved by CI (Build & Test passed)."
