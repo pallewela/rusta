@@ -57,6 +57,39 @@ After merge, the existing automation handles tagging, release notes,
 CHANGELOG update, GitHub Release with SBOM + SLSA provenance,
 crates.io publish, and the Homebrew tap bump.
 
+## Versioning & releases
+
+- **Versioning scheme:** Semantic Versioning 2.0.0
+  ([semver.org](https://semver.org/)) — `MAJOR.MINOR.PATCH`.
+- **Release tags:** every release is identified in version control by
+  an annotated git tag named `vMAJOR.MINOR.PATCH` (e.g. `v1.0.16`).
+  The tag set on `main` is the source of truth for the list of
+  releases the project has ever cut — list them with
+  `git tag --list 'v*' --sort=-v:refname`.
+- **Publication channels for each tag:**
+  - A [GitHub Release](https://github.com/pallewela/rusta/releases)
+    with the `aarch64-apple-darwin` tarball, a CycloneDX SBOM, and a
+    Sigstore-signed SLSA provenance attestation.
+  - A [crates.io](https://crates.io/crates/rusta-cli) version of
+    `rusta-cli`.
+  - A [Homebrew tap](https://github.com/pallewela/homebrew-tap)
+    formula bump.
+- **Tagging is fully automated.** Maintainers do not create tags by
+  hand. The [`Auto-tag` workflow](.github/workflows/auto-tag.yml)
+  runs after CI succeeds on `main` and:
+  1. Inspects the head commit message to pick the SemVer bump level
+     — `[bump:major]` / `BREAKING CHANGE` → major; `[bump:minor]` →
+     minor; default → patch; `[skip release]` → no tag.
+  2. Regenerates `CHANGELOG.md` via `git-cliff`.
+  3. Commits the updated CHANGELOG and pushes a new annotated tag
+     pointing at that commit.
+- **Tag immutability policy.** Once pushed, release tags are
+  considered immutable: they are not deleted, moved, or rewritten.
+  The repository enforces this with a `protect-tags` ruleset on
+  `refs/tags/v*` (`deletion` and `non_fast_forward` blocked). If a
+  release contains a defect, the fix ships as a new patch release
+  with an incremented tag, never as a rewritten old tag.
+
 ## Requirements for acceptable contributions
 
 This section uses [RFC 2119](https://datatracker.ietf.org/doc/html/rfc2119)
