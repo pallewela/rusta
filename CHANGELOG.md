@@ -4,7 +4,15 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.10] - 2026-05-16
+
+### CI
+- Add cargo-deny, CodeQL, and CycloneDX SBOM on release ([2ac77a4](https://github.com/pallewela/rusta/commit/2ac77a498b92af42a41c252bf279c6e1b5f2c728))
+
 ## [1.0.9] - 2026-05-16
+
+### Documentation
+- Release v1.0.9 [skip release] ([6219773](https://github.com/pallewela/rusta/commit/6219773f14d64cc4d90e2a5bed50f53e9aebdad2))
 
 ### Features
 - Publish to crates.io as rusta-cli on release ([6f1996c](https://github.com/pallewela/rusta/commit/6f1996c2c29a52e28e15f060162eee23ed572b56))
