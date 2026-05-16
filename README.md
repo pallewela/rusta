@@ -1,6 +1,7 @@
 # rusta
 
 [![CI](https://github.com/pallewela/rusta/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/pallewela/rusta/actions/workflows/ci.yml)
+[![CodeQL](https://github.com/pallewela/rusta/actions/workflows/codeql.yml/badge.svg?branch=main)](https://github.com/pallewela/rusta/actions/workflows/codeql.yml)
 [![codecov](https://codecov.io/gh/pallewela/rusta/branch/main/graph/badge.svg)](https://codecov.io/gh/pallewela/rusta)
 [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/pallewela/rusta/badge)](https://scorecard.dev/viewer/?uri=github.com/pallewela/rusta)
 [![Release](https://img.shields.io/github/v/release/pallewela/rusta?sort=semver)](https://github.com/pallewela/rusta/releases/latest)
