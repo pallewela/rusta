@@ -1,0 +1,23 @@
+[package]
+name = "rusta-fuzz"
+version = "0.0.0"
+edition = "2021"
+publish = false
+authors = ["Dumindu Perera <dumindu.perera@ifs.com>"]
+
+[package.metadata]
+cargo-fuzz = true
+
+[dependencies]
+libfuzzer-sys = "0.4"
+rusta-cli = { path = ".." }
+
+# Prevent this crate from being picked up by the parent workspace.
+[workspace]
+
+[[bin]]
+name = "parse_list_json"
+path = "fuzz_targets/parse_list_json.rs"
+test = false
+doc = false
+bench = false
