@@ -4,7 +4,15 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.22] - 2026-05-16
+
+### Bug Fixes
+- Target x86_64-unknown-linux-gnu explicitly (#21) ([2f2c6a7](https://github.com/pallewela/rusta/commit/2f2c6a7251c0302d3748c683c0a832e9cd590f1d))
+
 ## [1.0.21] - 2026-05-16
+
+### Documentation
+- Release v1.0.21 [skip release] ([b27a7c5](https://github.com/pallewela/rusta/commit/b27a7c52ff2be2ad64816844042b7741ca6cd877))
 
 ### Features
 - Add cargo-fuzz harness for parse_list_json (#20) ([45c5db7](https://github.com/pallewela/rusta/commit/45c5db78a55bacdd8a33a47ddf63b4407192e6fd))
