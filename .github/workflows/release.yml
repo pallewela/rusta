@@ -108,9 +108,12 @@ jobs:
         run: cargo publish --allow-dirty --no-verify
 
   provenance:
-    # SLSA reusable workflows are pinned by tag per SLSA's trust model.
-    # Scorecard's Pinned-Dependencies check has an explicit exception for
-    # slsa-framework/slsa-github-generator — do not pin to SHA here.
+    # SLSA reusable workflows MUST be referenced by tag, never by SHA,
+    # because slsa-verifier requires the tag to anchor its trust check.
+    # Pinning to SHA breaks downstream provenance verification.
+    # See SECURITY-EXCEPTIONS.md for the full rationale and the
+    # corresponding Scorecard Pinned-Dependencies alert dismissal.
+    #
     # upload-assets is intentionally false: GitHub releases became
     # immutable in 2026-02; attempting to add the provenance file after
     # the release is created errors with "Cannot upload assets to an
