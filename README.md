@@ -33,7 +33,15 @@ brew install pallewela/tap/rusta
 
 This installs the latest prebuilt `aarch64-apple-darwin` binary from the
 [GitHub Releases](https://github.com/pallewela/rusta/releases) page.
-Upgrades land via `brew upgrade rusta`.
+
+To upgrade to a newer release, refresh the tap first — `brew upgrade`
+alone only compares against the local tap clone, which is not pulled
+on `brew upgrade`:
+
+```sh
+brew update
+brew upgrade rusta
+```
 
 ### Manual download
 

@@ -163,6 +163,14 @@ jobs:
             brew install pallewela/tap/rusta
             ```
 
+            If you have an older version installed, refresh the tap before
+            upgrading — `brew upgrade` does not pull tap updates on its own:
+
+            ```sh
+            brew update
+            brew upgrade rusta
+            ```
+
             ## Manual install
 
             ```sh
