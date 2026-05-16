@@ -67,3 +67,18 @@ jobs:
             exit 0
           fi
           gh pr review "${PR}" --repo "${GITHUB_REPOSITORY}" --approve --body "Auto-approved by CI (Build & Test passed)."
+
+      - name: Enable auto-merge on trusted-author PRs
+        if: >-
+          steps.pr.outputs.number != '' &&
+          (steps.pr.outputs.author == 'pallewela' ||
+           steps.pr.outputs.author == 'dependabot[bot]')
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR: ${{ steps.pr.outputs.number }}
+        run: |
+          set -euo pipefail
+          # `--auto` queues the merge; GitHub completes it once every required
+          # check + review + signature gate is satisfied. Idempotent: running
+          # twice on a PR already queued is a no-op success.
+          gh pr merge "${PR}" --repo "${GITHUB_REPOSITORY}" --auto --squash --delete-branch
