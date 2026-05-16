@@ -4,6 +4,11 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.15] - 2026-05-16
+
+### CI
+- Generate provenance before release to satisfy immutability (#14) ([19128e2](https://github.com/pallewela/rusta/commit/19128e2a318d0ec31210c2c5caaae9a321b15a41))
+
 ## [1.0.14] - 2026-05-16
 
 ### CI
@@ -16,6 +21,7 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Add auto-approve workflow for solo-maintainer PR flow (#6) ([e5c1290](https://github.com/pallewela/rusta/commit/e5c129075f34d346e36b6a2fc79c64bc94b461b0))
 
 ### Documentation
+- Release v1.0.14 [skip release] ([8ef0d59](https://github.com/pallewela/rusta/commit/8ef0d597afc6476b261d1ce16e51cd830e824a12))
 - Add mdBook documentation site with Pages deploy (#7) ([2f2d391](https://github.com/pallewela/rusta/commit/2f2d3915f02a5ea7e35de0ecb64f5244bf2084f4))
 
 ## [1.0.13] - 2026-05-16
