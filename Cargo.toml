@@ -13,6 +13,7 @@ authors = ["Dumindu Perera <dumindu.perera@ifs.com>"]
 exclude = [
     ".github/",
     "tests/",
+    "fuzz/",
     "cliff.toml",
     "CHANGELOG.md",
 ]
