@@ -1,5 +1,12 @@
 # rusta
 
+[![CI](https://github.com/pallewela/rusta/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/pallewela/rusta/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/pallewela/rusta?sort=semver)](https://github.com/pallewela/rusta/releases/latest)
+[![Last release](https://img.shields.io/github/release-date/pallewela/rusta)](https://github.com/pallewela/rusta/releases/latest)
+[![License](https://img.shields.io/github/license/pallewela/rusta)](LICENSE)
+[![Platform](https://img.shields.io/badge/platform-macOS%20arm64-blue)](#requirements)
+[![Homebrew tap](https://img.shields.io/badge/brew-pallewela%2Ftap%2Frusta-orange?logo=homebrew)](https://github.com/pallewela/homebrew-tap)
+
 A macOS-only CLI for creating and managing Ubuntu VMs on Apple Silicon using [Tart](https://tart.run/).
 
 `rusta` is the spiritual successor to `ubuntu-tart-vm.sh`, exposing its features through a subcommand-based UX rather than a single mega-script. It handles cloning Ubuntu OCI images, provisioning guests over SSH, wiring up Docker, and keeping track of a default VM so day-to-day commands stay short.
