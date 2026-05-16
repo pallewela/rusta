@@ -77,7 +77,13 @@ jobs:
           (steps.pr.outputs.author == 'pallewela' ||
            steps.pr.outputs.author == 'dependabot[bot]')
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Use RELEASE_PAT (user identity) instead of GITHUB_TOKEN
+          # (github-actions[bot]) so the resulting auto-merge commit on
+          # main is attributed to a user. GitHub suppresses workflow
+          # triggers for events caused by GITHUB_TOKEN, which would
+          # otherwise prevent CI -> auto-tag -> release from firing on
+          # the merge commit.
+          GH_TOKEN: ${{ secrets.RELEASE_PAT }}
           PR: ${{ steps.pr.outputs.number }}
         run: |
           set -euo pipefail
