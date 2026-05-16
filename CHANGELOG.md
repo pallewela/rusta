@@ -4,10 +4,18 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.23] - 2026-05-16
+
+### CI
+- Verify Homebrew tap formula after dispatch (#22) ([60e89e9](https://github.com/pallewela/rusta/commit/60e89e9f3cd957e5d96c5c81df0382eb7872c65d))
+
 ## [1.0.22] - 2026-05-16
 
 ### Bug Fixes
 - Target x86_64-unknown-linux-gnu explicitly (#21) ([2f2c6a7](https://github.com/pallewela/rusta/commit/2f2c6a7251c0302d3748c683c0a832e9cd590f1d))
+
+### Documentation
+- Release v1.0.22 [skip release] ([ffa37ba](https://github.com/pallewela/rusta/commit/ffa37bab669a963f33e6a2489e96a7abf9771d5b))
 
 ## [1.0.21] - 2026-05-16
 
