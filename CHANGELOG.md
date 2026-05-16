@@ -4,9 +4,15 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.8] - 2026-05-16
+
+### CI
+- Collect coverage with cargo-llvm-cov and upload to Codecov ([263db91](https://github.com/pallewela/rusta/commit/263db91eb3284f7d0dc8a8132ac3ae744c995116))
+
 ## [1.0.7] - 2026-05-16
 
 ### Documentation
+- Release v1.0.7 [skip release] ([d94f0f4](https://github.com/pallewela/rusta/commit/d94f0f4731d7dd73a97489e456d493640ef1d45c))
 - Add CI, release, license, platform, and brew tap badges ([0000d3a](https://github.com/pallewela/rusta/commit/0000d3ad7298da3d95a42f236dbef87accd5e274))
 
 ## [1.0.6] - 2026-05-16
