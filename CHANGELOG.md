@@ -4,9 +4,15 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.25] - 2026-05-16
+
+### Documentation
+- Add CodeQL status badge (#24) ([99f97fd](https://github.com/pallewela/rusta/commit/99f97fdd887b6e3265e54b5cec9b9c7e25e0a958))
+
 ## [1.0.24] - 2026-05-16
 
 ### Documentation
+- Release v1.0.24 [skip release] ([f46497c](https://github.com/pallewela/rusta/commit/f46497cc4e00920906e860a5a8053a6f7209bccb))
 - Document brew update before brew upgrade (#23) ([85f0267](https://github.com/pallewela/rusta/commit/85f0267d92274c3a138cbe8ed1be9ceaf7739a04))
 
 ## [1.0.23] - 2026-05-16
