@@ -57,22 +57,82 @@ After merge, the existing automation handles tagging, release notes,
 CHANGELOG update, GitHub Release with SBOM + SLSA provenance,
 crates.io publish, and the Homebrew tap bump.
 
+## Requirements for acceptable contributions
+
+This section uses [RFC 2119](https://datatracker.ietf.org/doc/html/rfc2119)
+language. **MUST** items are hard requirements — CI enforces them and
+a PR cannot merge without satisfying every one. **SHOULD** items are
+expectations during review; deviating from one is fine if you have a
+reason.
+
+### MUST (enforced by CI)
+
+1. **The change builds.** `cargo build --all-targets --locked`
+   succeeds on `macos-latest` (Apple Silicon).
+2. **All tests pass.** `cargo llvm-cov --locked --lcov` succeeds; CI
+   uploads the lcov to Codecov.
+3. **No new advisories or banned crates.**
+   `cargo deny --locked check` (advisories, licenses, bans, sources)
+   exits clean. New dependencies must use a license on
+   `deny.toml`'s allow-list — typically MIT / Apache-2.0 / BSD /
+   ISC / Unicode / CDLA-Permissive. Copyleft licenses (GPL, AGPL,
+   LGPL, MPL beyond what is already allowed) are not accepted.
+4. **CodeQL passes.** No new high-severity findings in the Rust source
+   or workflow YAML.
+5. **Conventional commit prefix.** The PR's commits use
+   [Conventional Commits](https://www.conventionalcommits.org/) —
+   `feat:`, `fix:`, `docs:`, `test:`, `ci:`, `refactor:`, `chore:`.
+   `[skip release]` is reserved for the auto-tag CHANGELOG commit;
+   do not use it manually.
+6. **Verified signed commits.** The `main` branch protection rule
+   requires all incoming commits to be signed. Sign your commits with
+   either a [GPG](https://docs.github.com/en/authentication/managing-commit-signature-verification/signing-commits)
+   or [SSH](https://docs.github.com/en/authentication/managing-commit-signature-verification/about-commit-signature-verification#ssh-commit-signature-verification)
+   key configured on your GitHub account, or rebase through the GitHub
+   web UI which signs automatically.
+7. **License agreement.** Contributions are accepted under the
+   [MIT License](LICENSE) only. By opening a PR you confirm that
+   your contribution is yours to license under MIT.
+
+### SHOULD (review expectations)
+
+1. **Tests covering the change.** New features SHOULD ship with at
+   least one integration test under `tests/` exercising the new
+   behaviour end-to-end. Bug fixes SHOULD ship with a regression test
+   that fails on `main` and passes with the fix.
+2. **No coverage regression.** Codecov reports a delta on each PR.
+   A small regression (a couple of percent on a non-critical path) is
+   acceptable if justified in the PR description; large drops will be
+   pushed back.
+3. **`cargo fmt` applied.** `cargo fmt --check` should produce no
+   diff. CI does not currently fail on this but it is the de-facto
+   project style.
+4. **`cargo clippy` clean.** Run
+   `cargo clippy --all-targets -- -W clippy::all` and address findings
+   in code you touched. Pre-existing warnings are not your problem.
+5. **Edition 2021.** Stick to the `Cargo.toml` `edition` setting.
+   Edition bumps are a separate, coordinated change.
+6. **Minimal dependencies.** Prefer the standard library or an
+   existing transitive dependency over pulling a new crate. Adding a
+   new direct dependency SHOULD be justified in the PR description.
+7. **Documentation in step with code.** User-facing behaviour changes
+   SHOULD update the relevant docs:
+   - `README.md` for top-level Quick Start or command summary.
+   - `docs/src/commands.md` (and adjacent pages) for the mdBook site.
+   The `CHANGELOG.md` is regenerated automatically from conventional
+   commits; do not edit it by hand.
+8. **Comments explain *why*, not *what*.** Default to no comments.
+   Add one only when a non-obvious invariant, constraint, or workaround
+   warrants it. Identifiers should carry the meaning.
+
 ## Coding conventions
 
-- **Rust edition 2021.** The `Cargo.toml` `edition` field is the source
-  of truth.
-- **Formatting.** Run `cargo fmt` before committing. CI does not yet
-  fail on `rustfmt`, but please keep diffs clean.
-- **Lints.** `cargo clippy --all-targets -- -W clippy::all` is a useful
-  pre-commit check.
-- **Tests.** Add or extend an integration test under `tests/` for any
-  user-facing behaviour change. Unit tests live next to the code under
-  `#[cfg(test)] mod tests {}`.
-- **Comments.** Default to writing no comments. Explain *why*, not
-  *what*, when a comment is necessary. Don't document the obvious.
-- **Dependencies.** Avoid adding new crates unless the alternative is
-  meaningfully worse. New dependencies go through `cargo-deny`'s license
-  and advisory checks in CI.
+- **Rust edition 2021.** The `Cargo.toml` `edition` field is the
+  source of truth.
+- **Tests.** Integration tests live under `tests/`. Unit tests live
+  next to the code under `#[cfg(test)] mod tests {}`.
+- **Comments.** See the SHOULD item above.
+- **Dependencies.** See the MUST and SHOULD items above.
 
 ## Project structure
 
