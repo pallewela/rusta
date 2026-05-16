@@ -86,7 +86,7 @@ jobs:
 
       - name: Update CHANGELOG.md
         if: steps.bump.outputs.skip != 'true'
-        uses: orhun/git-cliff-action@v3
+        uses: orhun/git-cliff-action@v4
         with:
           config: cliff.toml
           args: --tag ${{ steps.next.outputs.tag }}
