@@ -84,7 +84,16 @@ jobs:
           echo "tag=$NEW" >> "$GITHUB_OUTPUT"
           echo "Next tag: $NEW"
 
-      - name: Push tag
+      - name: Update CHANGELOG.md
+        if: steps.bump.outputs.skip != 'true'
+        uses: orhun/git-cliff-action@v3
+        with:
+          config: cliff.toml
+          args: --tag ${{ steps.next.outputs.tag }}
+        env:
+          OUTPUT: CHANGELOG.md
+
+      - name: Commit CHANGELOG, then tag and push
         if: steps.bump.outputs.skip != 'true'
         env:
           NEW_TAG: ${{ steps.next.outputs.tag }}
@@ -92,5 +101,12 @@ jobs:
           set -euo pipefail
           git config user.name  'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+
+          if ! git diff --quiet -- CHANGELOG.md; then
+            git add CHANGELOG.md
+            git commit -m "docs(changelog): release ${NEW_TAG} [skip release]"
+            git push origin HEAD:main
+          fi
+
           git tag -a "$NEW_TAG" -m "$NEW_TAG"
           git push origin "$NEW_TAG"
