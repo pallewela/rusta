@@ -4,10 +4,18 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.16] - 2026-05-16
+
+### Documentation
+- Add CONTRIBUTING and SUPPORT, link from README and mdBook (#15) ([cfab863](https://github.com/pallewela/rusta/commit/cfab863a10880a7df8b3fa1d2ca5a0aedad8b7e6))
+
 ## [1.0.15] - 2026-05-16
 
 ### CI
 - Generate provenance before release to satisfy immutability (#14) ([19128e2](https://github.com/pallewela/rusta/commit/19128e2a318d0ec31210c2c5caaae9a321b15a41))
+
+### Documentation
+- Release v1.0.15 [skip release] ([ade0f1c](https://github.com/pallewela/rusta/commit/ade0f1c4ddfbf9b4fc629f593cc54c4cc856c7ab))
 
 ## [1.0.14] - 2026-05-16
 
