@@ -13,6 +13,8 @@
 - [Security](security.md)
 - [Changelog](changelog.md)
 
-# Contributing
+# Contributing & Support
 
+- [Contributing](contributing.md)
+- [Support & Feedback](support.md)
 - [Development](development.md)
