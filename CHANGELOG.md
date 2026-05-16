@@ -4,10 +4,18 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.13] - 2026-05-16
+
+### CI
+- Generate SLSA Level 3 provenance for releases (#5) ([9ffe832](https://github.com/pallewela/rusta/commit/9ffe832fd7e4ecc6a497daeb9d077438015f1d32))
+
 ## [1.0.12] - 2026-05-16
 
 ### CI
 - Harden workflows for OSSF Scorecard ([c2c08e4](https://github.com/pallewela/rusta/commit/c2c08e474012bc165fb21d5b6a7f822390c5fcb3))
+
+### Documentation
+- Release v1.0.12 [skip release] ([e1e6826](https://github.com/pallewela/rusta/commit/e1e6826c594927880e9f9613020514f007527d46))
 
 ## [1.0.11] - 2026-05-16
 
