@@ -4,11 +4,19 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.12] - 2026-05-16
+
+### CI
+- Harden workflows for OSSF Scorecard ([c2c08e4](https://github.com/pallewela/rusta/commit/c2c08e474012bc165fb21d5b6a7f822390c5fcb3))
+
 ## [1.0.11] - 2026-05-16
 
 ### CI
 - Pin ossf/scorecard-action to v2.4.3 ([48c90d6](https://github.com/pallewela/rusta/commit/48c90d698226aea714ef746b456fb22603179bed))
 - Add OSSF Scorecard workflow and badge ([5716ebc](https://github.com/pallewela/rusta/commit/5716ebcecaf678d9a1dd5597e0805e6054960240))
+
+### Documentation
+- Release v1.0.11 [skip release] ([b2157bb](https://github.com/pallewela/rusta/commit/b2157bb533359c3645cdc4633de417ec687f0357))
 
 ## [1.0.10] - 2026-05-16
 
