@@ -4,10 +4,18 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.20] - 2026-05-16
+
+### Documentation
+- Document SLSA Pinned-Dependencies exception (#19) ([13a9052](https://github.com/pallewela/rusta/commit/13a90521005887334521b9aa6a28b8983adef4d6))
+
 ## [1.0.19] - 2026-05-16
 
 ### Bug Fixes
 - Use github.sha for auto-tag checkout (#18) ([568a0d3](https://github.com/pallewela/rusta/commit/568a0d36f0ed20f960384d28a3f59363c5339a07))
+
+### Documentation
+- Release v1.0.19 [skip release] ([66d3383](https://github.com/pallewela/rusta/commit/66d3383a12cdf4fd3829be716f2a00b4307d8af5))
 
 ## [1.0.18] - 2026-05-16
 
