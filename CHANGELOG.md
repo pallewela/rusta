@@ -4,10 +4,27 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.14] - 2026-05-16
+
+### CI
+- Support manual workflow_dispatch for recovery (#13) ([454fa72](https://github.com/pallewela/rusta/commit/454fa72879b3cabe7e4fbf205b813314f918b964))
+- Use RELEASE_PAT and add CI workflow_dispatch (#12) ([f125621](https://github.com/pallewela/rusta/commit/f125621b65c2ac16af4fb9c0571276a7bb58a9a4))
+- Use RELEASE_PAT for CHANGELOG API write (#11) ([a00b2b0](https://github.com/pallewela/rusta/commit/a00b2b0be7871549b946110e7dc537702c492b5b))
+- Grant contents: write so auto-merge can be enabled (#10) ([8f03115](https://github.com/pallewela/rusta/commit/8f03115244d5ec0483c18c4b5c8f7da78721bc03))
+- Enable auto-merge on trusted-author PRs (#9) ([d2f95f1](https://github.com/pallewela/rusta/commit/d2f95f1bbb1669941603b4199932a085e7e100fb))
+- Pass --repo to gh pr review (#8) ([cf4234e](https://github.com/pallewela/rusta/commit/cf4234e0700f51ef3eb57a5382fc0e40cc1fd6f3))
+- Add auto-approve workflow for solo-maintainer PR flow (#6) ([e5c1290](https://github.com/pallewela/rusta/commit/e5c129075f34d346e36b6a2fc79c64bc94b461b0))
+
+### Documentation
+- Add mdBook documentation site with Pages deploy (#7) ([2f2d391](https://github.com/pallewela/rusta/commit/2f2d3915f02a5ea7e35de0ecb64f5244bf2084f4))
+
 ## [1.0.13] - 2026-05-16
 
 ### CI
 - Generate SLSA Level 3 provenance for releases (#5) ([9ffe832](https://github.com/pallewela/rusta/commit/9ffe832fd7e4ecc6a497daeb9d077438015f1d32))
+
+### Documentation
+- Release v1.0.13 [skip release] ([83e1cd0](https://github.com/pallewela/rusta/commit/83e1cd02720e5485dbed21440c9c0daae8d59a2a))
 
 ## [1.0.12] - 2026-05-16
 
