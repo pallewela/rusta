@@ -48,7 +48,11 @@ jobs:
 
       - name: Build fuzz target (smoke test compilation)
         working-directory: fuzz
-        run: cargo +nightly fuzz build parse_list_json
+        # cargo-fuzz defaults to x86_64-unknown-linux-musl on Linux, but
+        # the sanitizer LLVM passes require dynamic libc, so musl fails
+        # with "sanitizer is incompatible with statically linked libc".
+        # Force GNU explicitly.
+        run: cargo +nightly fuzz build --target x86_64-unknown-linux-gnu parse_list_json
 
       - name: Run parse_list_json
         working-directory: fuzz
@@ -59,7 +63,7 @@ jobs:
           FUZZ_DURATION: ${{ github.event_name == 'schedule' && '600' || '30' }}
         run: |
           set -euo pipefail
-          cargo +nightly fuzz run parse_list_json -- \
+          cargo +nightly fuzz run --target x86_64-unknown-linux-gnu parse_list_json -- \
             -max_total_time="${FUZZ_DURATION}" \
             -print_final_stats=1
 
