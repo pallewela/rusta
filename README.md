@@ -11,6 +11,8 @@
 
 A macOS-only CLI for creating and managing Ubuntu VMs on Apple Silicon using [Tart](https://tart.run/).
 
+📖 **Documentation:** <https://pallewela.github.io/rusta/>
+
 `rusta` is the spiritual successor to `ubuntu-tart-vm.sh`, exposing its features through a subcommand-based UX rather than a single mega-script. It handles cloning Ubuntu OCI images, provisioning guests over SSH, wiring up Docker, and keeping track of a default VM so day-to-day commands stay short.
 
 ## Requirements
