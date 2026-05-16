@@ -34,6 +34,21 @@ jobs:
       - name: Build release binary
         run: cargo build --release
 
+      - name: Install cargo-cyclonedx
+        uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-cyclonedx
+
+      - name: Generate SBOM (CycloneDX)
+        id: sbom
+        run: |
+          set -euo pipefail
+          TAG="${GITHUB_REF_NAME}"
+          SBOM="rusta-${TAG}-sbom.cdx.json"
+          cargo cyclonedx --format json --override-filename "rusta-${TAG}-sbom.cdx"
+          test -f "${SBOM}"
+          echo "file=${SBOM}" >> "${GITHUB_OUTPUT}"
+
       - name: Package tarball
         id: pkg
         run: |
@@ -51,7 +66,9 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v3
         with:
-          files: ${{ steps.pkg.outputs.archive }}
+          files: |
+            ${{ steps.pkg.outputs.archive }}
+            ${{ steps.sbom.outputs.file }}
           generate_release_notes: true
           body: |
             ## Install via Homebrew
