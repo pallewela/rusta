@@ -98,7 +98,11 @@ jobs:
       - name: Commit CHANGELOG via API (signed by GitHub)
         if: steps.bump.outputs.skip != 'true'
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Use RELEASE_PAT so the API write is attributed to the owner,
+          # who is on the protect-main ruleset's bypass list. GITHUB_TOKEN
+          # authenticates as github-actions[bot], which is not in the
+          # bypass list and is rejected by the "require PR" rule.
+          GH_TOKEN: ${{ secrets.RELEASE_PAT }}
           NEW_TAG: ${{ steps.next.outputs.tag }}
         run: |
           set -euo pipefail
