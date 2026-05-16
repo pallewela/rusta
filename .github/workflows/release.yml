@@ -6,7 +6,7 @@ on:
       - 'v*'
 
 permissions:
-  contents: write
+  contents: read
 
 env:
   CARGO_TERM_COLOR: always
@@ -16,13 +16,15 @@ jobs:
     name: Build & publish (macOS arm64)
     runs-on: macos-latest
     timeout-minutes: 30
+    permissions:
+      contents: write
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6
 
       - name: Install Rust toolchain
-        uses: dtolnay/rust-toolchain@stable
+        uses: dtolnay/rust-toolchain@29eef336d9b2848a0b548edc03f92a220660cdb8  # stable
 
-      - uses: Swatinem/rust-cache@v2
+      - uses: Swatinem/rust-cache@e18b497796c12c097a38f9edb9d0641fb99eee32  # v2
 
       - name: Sync Cargo.toml version to tag
         run: |
@@ -35,7 +37,7 @@ jobs:
         run: cargo build --release
 
       - name: Install cargo-cyclonedx
-        uses: taiki-e/install-action@v2
+        uses: taiki-e/install-action@3771e22aa892e03fd35585fae288baad1755695c  # v2
         with:
           tool: cargo-cyclonedx
 
@@ -64,7 +66,7 @@ jobs:
           } >> "${GITHUB_OUTPUT}"
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v3
+        uses: softprops/action-gh-release@b4309332981a82ec1c5618f44dd2e27cc8bfbfda  # v3
         with:
           files: |
             ${{ steps.pkg.outputs.archive }}
@@ -104,7 +106,7 @@ jobs:
 
       - name: Bump Homebrew tap formula
         if: steps.tap.outputs.present == 'true'
-        uses: peter-evans/repository-dispatch@v4
+        uses: peter-evans/repository-dispatch@28959ce8df70de7be546dd1250a005dd32156697  # v4
         with:
           token: ${{ secrets.TAP_REPO_TOKEN }}
           repository: pallewela/homebrew-tap
