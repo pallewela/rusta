@@ -4,6 +4,11 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.7] - 2026-05-16
+
+### Documentation
+- Add CI, release, license, platform, and brew tap badges ([0000d3a](https://github.com/pallewela/rusta/commit/0000d3ad7298da3d95a42f236dbef87accd5e274))
+
 ## [1.0.6] - 2026-05-16
 
 ### CI
@@ -15,6 +20,7 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Bump peter-evans/repository-dispatch from 3 to 4 (#1) ([9d9cd59](https://github.com/pallewela/rusta/commit/9d9cd59ad9883d31b1297b5c988301d54c746a03))
 
 ### Documentation
+- Release v1.0.6 [skip release] ([5522c92](https://github.com/pallewela/rusta/commit/5522c92a1678743ee7a8411658709ee5ea521b09))
 - Add CHANGELOG.md and automate via git-cliff ([98ee645](https://github.com/pallewela/rusta/commit/98ee64563b309d4c7329da1951fada5db994f8ef))
 
 ## [1.0.5] - 2026-05-16
