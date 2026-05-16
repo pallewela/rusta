@@ -5,6 +5,7 @@ on:
     workflows: [CI]
     types: [completed]
     branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -16,8 +17,10 @@ concurrency:
 jobs:
   tag:
     if: >-
-      github.event.workflow_run.conclusion == 'success' &&
-      github.event.workflow_run.event == 'push'
+      (github.event_name == 'workflow_run' &&
+       github.event.workflow_run.conclusion == 'success' &&
+       github.event.workflow_run.event == 'push') ||
+      github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
@@ -25,7 +28,11 @@ jobs:
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6
         with:
-          ref: ${{ github.event.workflow_run.head_sha }}
+          # On workflow_run, target the SHA that just passed CI. On manual
+          # workflow_dispatch (recovery path), fall back to github.sha which
+          # is the ref the dispatch was made from (main HEAD when run from
+          # the Actions UI on main).
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
           fetch-depth: 0
           token: ${{ secrets.RELEASE_PAT }}
 
