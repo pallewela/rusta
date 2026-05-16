@@ -4,10 +4,19 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.11] - 2026-05-16
+
+### CI
+- Pin ossf/scorecard-action to v2.4.3 ([48c90d6](https://github.com/pallewela/rusta/commit/48c90d698226aea714ef746b456fb22603179bed))
+- Add OSSF Scorecard workflow and badge ([5716ebc](https://github.com/pallewela/rusta/commit/5716ebcecaf678d9a1dd5597e0805e6054960240))
+
 ## [1.0.10] - 2026-05-16
 
 ### CI
 - Add cargo-deny, CodeQL, and CycloneDX SBOM on release ([2ac77a4](https://github.com/pallewela/rusta/commit/2ac77a498b92af42a41c252bf279c6e1b5f2c728))
+
+### Documentation
+- Release v1.0.10 [skip release] ([8a7eb97](https://github.com/pallewela/rusta/commit/8a7eb9762635c4fb8cddf41bae89b55575a9cf15))
 
 ## [1.0.9] - 2026-05-16
 
