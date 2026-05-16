@@ -216,3 +216,34 @@ jobs:
               "url": "https://github.com/${{ github.repository }}/releases/download/${{ needs.build.outputs.tag }}/${{ needs.build.outputs.archive }}"
             }
 
+      # repository-dispatch returns success once the API accepts the event
+      # (HTTP 204); it does not wait for, or report on, the receiving
+      # workflow. Poll the tap formula directly so a successful release
+      # here implies a tap actually updated to this version + sha256. If
+      # the tap dispatch silently no-ops (token revoked, tap workflow
+      # broken, sed mismatch, branch protection rejection), this step
+      # fails the release loudly instead of letting brew quietly lag.
+      - name: Verify Homebrew tap formula updated
+        if: steps.tap.outputs.present == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.TAP_REPO_TOKEN }}
+          TAG: ${{ needs.build.outputs.tag }}
+          EXPECTED_SHA256: ${{ needs.build.outputs.sha256 }}
+        run: |
+          set -euo pipefail
+          VERSION="${TAG#v}"
+          for attempt in $(seq 1 18); do
+            content=$(gh api \
+              "repos/pallewela/homebrew-tap/contents/Formula/rusta.rb" \
+              --jq .content | base64 -d 2>/dev/null || true)
+            if printf '%s\n' "$content" | grep -qE "^  version \"${VERSION}\"\$" \
+               && printf '%s\n' "$content" | grep -qiE "^  sha256 \"${EXPECTED_SHA256}\"\$"; then
+              echo "Tap formula updated to ${VERSION}."
+              exit 0
+            fi
+            echo "Formula not yet at ${VERSION} (attempt ${attempt}/18); sleeping 10s..."
+            sleep 10
+          done
+          echo "::error::Tap formula did not update to ${VERSION} within 3 minutes." >&2
+          exit 1
+
