@@ -4,7 +4,20 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.0.6] - 2026-05-16
+
+### CI
+- Commit CHANGELOG via GitHub API for signed-commits rule ([47c6452](https://github.com/pallewela/rusta/commit/47c6452f84bad2c26de140a54c7e91e1d2832488))
+- Bump git-cliff-action to v4 ([a1e6770](https://github.com/pallewela/rusta/commit/a1e67704a66d7f616063f90f24c92c7ae44a369d))
+
+### Dependencies
+- Bump actions/checkout from 4 to 6 (#4) ([fdf7788](https://github.com/pallewela/rusta/commit/fdf77882abafb5e3dca437c0f8739548f13318f1))
+- Bump peter-evans/repository-dispatch from 3 to 4 (#1) ([9d9cd59](https://github.com/pallewela/rusta/commit/9d9cd59ad9883d31b1297b5c988301d54c746a03))
+
+### Documentation
+- Add CHANGELOG.md and automate via git-cliff ([98ee645](https://github.com/pallewela/rusta/commit/98ee64563b309d4c7329da1951fada5db994f8ef))
+
+## [1.0.5] - 2026-05-16
 
 ### Tests
 - Gate fake-tart exec on VM running state ([d04eeaf](https://github.com/pallewela/rusta/commit/d04eeaf4faa17578347e9b11558ea68453fc19b7))
