@@ -26,7 +26,10 @@ jobs:
     timeout-minutes: 5
     permissions:
       pull-requests: write
-      contents: read
+      # contents: write is required by the enablePullRequestAutoMerge
+      # GraphQL mutation; pull-requests: write alone returns
+      # "Resource not accessible by integration".
+      contents: write
     steps:
       - name: Resolve PR for head SHA
         id: pr
