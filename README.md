@@ -139,6 +139,18 @@ cargo test
 
 The integration tests under `tests/` exercise the CLI surface end-to-end against stubbed `tart`/`brew`/`ssh` binaries, so they run without an actual Tart install.
 
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the full developer guide,
+coding conventions, and how a PR flows through the auto-merge pipeline.
+
+## Support & feedback
+
+- **Bug reports** — open a [bug issue](https://github.com/pallewela/rusta/issues/new?labels=bug).
+- **Feature requests / enhancements** — open an [enhancement issue](https://github.com/pallewela/rusta/issues/new?labels=enhancement).
+- **Questions** — open an issue with the `question` label.
+- **Security vulnerabilities** — use GitHub's private reporting; see [SECURITY.md](SECURITY.md). Do **not** file security issues publicly.
+
+Detailed channels and response expectations are in [SUPPORT.md](SUPPORT.md).
+
 ## License
 
 MIT. See [LICENSE](LICENSE).
