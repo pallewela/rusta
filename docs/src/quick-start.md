@@ -43,8 +43,8 @@ Global flags accepted by every subcommand:
 - `--log <file>` — tee all stdout/stderr to the given file.
 - `--help`, `-h` — print help and exit.
 
-For full behavior, flags, and exit codes, see the
-[Specification](spec.md).
+For full behavior, flags, and exit codes, see the [Commands](commands.md)
+reference.
 
 ## State
 

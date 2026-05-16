@@ -25,4 +25,3 @@ via Homebrew on demand.
 - [Quick Start](quick-start.md) — the shortest path from zero to an SSH
   session in a fresh Ubuntu VM.
 - [Commands](commands.md) — full CLI command reference.
-- [Specification](spec.md) — the canonical behavior spec.

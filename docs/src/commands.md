@@ -1,7 +1,5 @@
 # Commands
 
-For the canonical specification, see the [Specification](spec.md).
-
 `rusta` is invoked as:
 
 ```
@@ -38,8 +36,7 @@ rusta up [<vm>] [--graphical|-G|--graphics|--gui] [--no-gui|--no-graphics]
 
 Boot a VM.
 
-- Resolves `<vm>` from the default VM if omitted (see the
-  [Specification](spec.md) §3).
+- Resolves `<vm>` from the default VM if omitted.
 - If the VM is already running, prints `[skip]` and exits 0.
 - Boot mode follows the VM's `create`-time `--gui` choice. VMs created
   without `--gui` boot headless (`tart run <vm> --no-graphics`).
@@ -175,7 +172,7 @@ rusta ssh [<vm>] [--auto-up] [-- cmd args...]
 - If the VM is not running, exits 1 with a hint to `rusta up`. Pass
   `--auto-up` to boot first.
 - Connects via `sshpass -p <password> ssh <user>@<ip>` with the standard
-  rusta SSH options (see [Specification](spec.md) §6.2).
+  rusta SSH options.
 - Anything after `--` is executed as a remote command; otherwise an
   interactive shell is opened.
 

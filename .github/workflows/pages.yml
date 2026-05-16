@@ -6,7 +6,6 @@ on:
     paths:
       - 'docs/**'
       - 'README.md'
-      - 'SPEC.md'
       - 'SECURITY.md'
       - 'CHANGELOG.md'
       - '.github/workflows/pages.yml'

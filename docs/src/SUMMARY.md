@@ -10,7 +10,6 @@
 
 # Reference
 
-- [Specification](spec.md)
 - [Security](security.md)
 - [Changelog](changelog.md)
 
