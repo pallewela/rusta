@@ -1,6 +1,9 @@
 # Rust build output
 /target
 
+# mdBook build output
+docs/book/
+
 # IDE / editor
 .idea/
 .vscode/

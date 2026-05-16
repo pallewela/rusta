@@ -1,0 +1,16 @@
+[book]
+title = "rusta"
+description = "macOS CLI for creating and managing Ubuntu VMs on Apple Silicon via Tart."
+authors = ["pallewela"]
+language = "en"
+src = "src"
+
+[output.html]
+git-repository-url = "https://github.com/pallewela/rusta"
+edit-url-template = "https://github.com/pallewela/rusta/edit/main/docs/{path}"
+default-theme = "navy"
+preferred-dark-theme = "navy"
+site-url = "/rusta/"
+
+[output.html.search]
+enable = true
