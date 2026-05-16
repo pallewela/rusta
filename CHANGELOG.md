@@ -4,10 +4,18 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.9] - 2026-05-16
+
+### Features
+- Publish to crates.io as rusta-cli on release ([6f1996c](https://github.com/pallewela/rusta/commit/6f1996c2c29a52e28e15f060162eee23ed572b56))
+
 ## [1.0.8] - 2026-05-16
 
 ### CI
 - Collect coverage with cargo-llvm-cov and upload to Codecov ([263db91](https://github.com/pallewela/rusta/commit/263db91eb3284f7d0dc8a8132ac3ae744c995116))
+
+### Documentation
+- Release v1.0.8 [skip release] ([9271799](https://github.com/pallewela/rusta/commit/92717992bd3d602c1337c66f46ff6d1deca7326b))
 
 ## [1.0.7] - 2026-05-16
 
