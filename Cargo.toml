@@ -1,7 +1,21 @@
 [package]
-name = "rusta"
+name = "rusta-cli"
 version = "0.1.0"
 edition = "2021"
+description = "macOS arm64 CLI for creating and managing Ubuntu VMs on Tart"
+license = "MIT"
+repository = "https://github.com/pallewela/rusta"
+homepage = "https://github.com/pallewela/rusta"
+readme = "README.md"
+keywords = ["tart", "vm", "macos", "ubuntu", "cli"]
+categories = ["command-line-utilities", "virtualization"]
+authors = ["Dumindu Perera <dumindu.perera@ifs.com>"]
+exclude = [
+    ".github/",
+    "tests/",
+    "cliff.toml",
+    "CHANGELOG.md",
+]
 
 [[bin]]
 name = "rusta"

@@ -45,6 +45,15 @@ install -m 0755 rusta /usr/local/bin/rusta
 Each release page lists the SHA256 of the tarball; verify with
 `shasum -a 256` before installing.
 
+### From crates.io
+
+```sh
+cargo install rusta-cli
+```
+
+The crate is named `rusta-cli` on crates.io because `rusta` was already
+taken; the installed binary is still `rusta`.
+
 ### From source
 
 ```sh
