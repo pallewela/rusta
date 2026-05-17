@@ -4,9 +4,15 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.27] - 2026-05-17
+
+### Features
+- Add shell completions and man pages (#26) ([94f85b2](https://github.com/pallewela/rusta/commit/94f85b217191c64afe2353760974d2ca4428c18b))
+
 ## [1.0.26] - 2026-05-17
 
 ### Documentation
+- Release v1.0.26 [skip release] ([e94b605](https://github.com/pallewela/rusta/commit/e94b6052bb45362bc1229dcf6f551569f0624a19))
 - Add crates.io version badge (#25) ([98817de](https://github.com/pallewela/rusta/commit/98817defcdd335798f32c98c5185ef481c19c8c5))
 
 ## [1.0.25] - 2026-05-16
