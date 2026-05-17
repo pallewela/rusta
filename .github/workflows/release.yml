@@ -42,6 +42,21 @@ jobs:
       - name: Build release binary
         run: cargo build --release
 
+      - name: Generate shell completions and man pages
+        run: |
+          set -euo pipefail
+          BIN=./target/release/rusta
+          OUT=target/release/share
+          mkdir -p \
+            "$OUT/man/man1" \
+            "$OUT/bash-completion/completions" \
+            "$OUT/zsh/site-functions" \
+            "$OUT/fish/vendor_completions.d"
+          "$BIN" completions bash > "$OUT/bash-completion/completions/rusta"
+          "$BIN" completions zsh  > "$OUT/zsh/site-functions/_rusta"
+          "$BIN" completions fish > "$OUT/fish/vendor_completions.d/rusta.fish"
+          "$BIN" man "$OUT/man/man1"
+
       - name: Install cargo-cyclonedx
         uses: taiki-e/install-action@3771e22aa892e03fd35585fae288baad1755695c  # v2
         with:
@@ -63,7 +78,7 @@ jobs:
           set -euo pipefail
           TAG="${GITHUB_REF_NAME}"
           ARCHIVE="rusta-${TAG}-aarch64-apple-darwin.tar.gz"
-          tar -C target/release -czf "${ARCHIVE}" rusta
+          tar -C target/release -czf "${ARCHIVE}" rusta share
           SHA256="$(shasum -a 256 "${ARCHIVE}" | awk '{print $1}')"
           {
             echo "archive=${ARCHIVE}"
