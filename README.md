@@ -9,6 +9,7 @@
 [![License](https://img.shields.io/github/license/pallewela/rusta)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-macOS%20arm64-blue)](#requirements)
 [![Homebrew tap](https://img.shields.io/badge/brew-pallewela%2Ftap%2Frusta-orange?logo=homebrew)](https://github.com/pallewela/homebrew-tap)
+[![crates.io](https://img.shields.io/crates/v/rusta-cli.svg?logo=rust)](https://crates.io/crates/rusta-cli)
 
 A macOS-only CLI for creating and managing Ubuntu VMs on Apple Silicon using [Tart](https://tart.run/).
 
