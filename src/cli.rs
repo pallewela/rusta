@@ -45,6 +45,24 @@ pub enum Command {
     DockerSetup(VmOnlyArgs),
     /// Copy host ~/.ssh/id_* and *.pem into the VM
     SshCopy(VmOnlyArgs),
+    /// Print a shell completion script to stdout
+    #[command(hide = true)]
+    Completions(CompletionsArgs),
+    /// Generate man pages into the given directory
+    #[command(hide = true)]
+    Man(ManArgs),
+}
+
+#[derive(Args, Debug)]
+pub struct CompletionsArgs {
+    /// Target shell
+    pub shell: clap_complete::Shell,
+}
+
+#[derive(Args, Debug)]
+pub struct ManArgs {
+    /// Output directory (created if absent). Writes `rusta.1` plus one page per subcommand.
+    pub dir: std::path::PathBuf,
 }
 
 #[derive(Args, Debug)]

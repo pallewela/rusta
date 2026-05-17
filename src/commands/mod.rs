@@ -6,6 +6,7 @@ use crate::error::{Error, Result};
 use crate::io as rio;
 use crate::runtime::{bin_for, skip_preflight};
 
+mod completions;
 mod create;
 mod default_cmd;
 mod delete;
@@ -25,9 +26,11 @@ pub fn dispatch(cli: Cli) -> Result<u8> {
         return Ok(0);
     };
 
-    // Most commands require Apple Silicon + brew + tart. `versions` only needs network.
+    // Most commands require Apple Silicon + brew + tart. A few are
+    // host-independent: `versions` only needs network; `completions` and
+    // `man` are packaging plumbing that must run anywhere.
     match &command {
-        Cmd::Versions => {}
+        Cmd::Versions | Cmd::Completions(_) | Cmd::Man(_) => {}
         _ => preflight()?,
     }
 
@@ -43,6 +46,8 @@ pub fn dispatch(cli: Cli) -> Result<u8> {
         Cmd::Ssh(a) => ssh_cmd::run(a),
         Cmd::DockerSetup(a) => docker_setup::run(a),
         Cmd::SshCopy(a) => ssh_copy::run(a),
+        Cmd::Completions(a) => completions::completions(a),
+        Cmd::Man(a) => completions::man(a),
     }
 }
 
