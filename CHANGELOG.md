@@ -4,9 +4,15 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2026-05-22
+
+### Features
+- Notify users of new releases [bump:minor] (#33) ([20bb1d5](https://github.com/pallewela/rusta/commit/20bb1d5d8d22bcb287edfb362774f5a8c5685f0c))
+
 ## [1.0.30] - 2026-05-22
 
 ### Documentation
+- Release v1.0.30 [skip release] ([818bbc2](https://github.com/pallewela/rusta/commit/818bbc26e8a85f849ef012cb18bdb15ba29f7bd4))
 - Drop sort=semver from release badge (#31) ([9b598dc](https://github.com/pallewela/rusta/commit/9b598dcbc97fcdc3b08c8a94c8312d04e0042ca4))
 
 ## [1.0.29] - 2026-05-22
