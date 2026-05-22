@@ -93,7 +93,7 @@ Maintainer notes for cutting a new release:
 # Create + provision a default Ubuntu 24.04 VM
 rusta create
 
-# Boot it (headless by default)
+# Boot it (graphics window by default; pass --no-gui for headless)
 rusta up
 
 # SSH in
@@ -112,7 +112,7 @@ The first time you run an argument-less command with more than one VM present, `
 
 | Subcommand                     | Purpose                                                          |
 | ------------------------------ | ---------------------------------------------------------------- |
-| `rusta up [<vm>]`              | Start a VM (headless by default; `--graphical` for a window).    |
+| `rusta up [<vm>]`              | Start a VM (graphics window by default; `--no-gui` for headless).|
 | `rusta down [<vm>]`            | Gracefully shut down a VM (`--force` to hard-stop).              |
 | `rusta create [<vm>]`          | Create and provision a new Ubuntu VM.                            |
 | `rusta delete <vm>`            | Delete a VM (requires confirmation or `--yes`).                  |

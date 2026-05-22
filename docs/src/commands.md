@@ -38,8 +38,9 @@ Boot a VM.
 
 - Resolves `<vm>` from the default VM if omitted.
 - If the VM is already running, prints `[skip]` and exits 0.
-- Boot mode follows the VM's `create`-time `--gui` choice. VMs created
-  without `--gui` boot headless (`tart run <vm> --no-graphics`).
+- Boots with a graphics window by default. VMs explicitly created without
+  `--gui` boot headless (`tart run <vm> --no-graphics`); VMs created with
+  `--gui` or VMs with no recorded preference boot graphical.
 - `--graphical` (aliases: `-G`, `--graphics`, `--gui`) forces a graphics
   window for this invocation.
 - `--no-gui` (alias: `--no-graphics`) forces headless boot, even for

@@ -38,14 +38,14 @@ fn up_with_graphical_flag_runs() {
 }
 
 #[test]
-fn up_unknown_vm_defaults_to_headless() {
-    // No `[vms.lab]` entry in state.toml → default to headless.
+fn up_unknown_vm_defaults_to_graphical() {
+    // No `[vms.lab]` entry in state.toml → default to graphical (issue #27).
     let h = Harness::new();
     h.add_vm("lab", "stopped");
     let out = h.run(&["up", "lab"]);
     assert_eq!(code(&out), 0);
     let argv = h.last_run_args().expect("run logged");
-    assert!(argv.iter().any(|a| a == "--no-graphics"), "argv: {argv:?}");
+    assert!(!argv.iter().any(|a| a == "--no-graphics"), "argv: {argv:?}");
 }
 
 #[test]
