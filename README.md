@@ -123,6 +123,7 @@ The first time you run an argument-less command with more than one VM present, `
 | `rusta ssh [<vm>] [-- cmd...]` | Open an SSH session or run a command on the VM.                  |
 | `rusta docker-setup [<vm>]`    | Install Docker in the VM and wire host SSH/Docker context.       |
 | `rusta ssh-copy [<vm>]`        | Copy host `~/.ssh/id_*` and `*.pem` into the VM.                 |
+| `rusta set-gui <vm> <on\|off>` | Set whether `rusta up <vm>` defaults to graphical (`on`) or headless (`off`). |
 
 Global flags accepted by every subcommand:
 
