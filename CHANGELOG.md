@@ -4,7 +4,15 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.28] - 2026-05-22
+
+### Bug Fixes
+- Default to graphical boot for VMs without recorded preference (#28) ([2bb6568](https://github.com/pallewela/rusta/commit/2bb6568a893f07bc7d7b62f96fe2d9804e923668))
+
 ## [1.0.27] - 2026-05-17
+
+### Documentation
+- Release v1.0.27 [skip release] ([72716dd](https://github.com/pallewela/rusta/commit/72716dd7face162b9e467238e211395a63ec49ef))
 
 ### Features
 - Add shell completions and man pages (#26) ([94f85b2](https://github.com/pallewela/rusta/commit/94f85b217191c64afe2353760974d2ca4428c18b))
