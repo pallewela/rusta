@@ -22,7 +22,7 @@ pub fn run(args: UpArgs) -> Result<u8> {
     } else if args.graphical {
         false
     } else {
-        !state::vm_gui(&vm).unwrap_or(false)
+        !state::vm_gui(&vm).unwrap_or(true)
     };
     if headless {
         rio::info(&format!("Starting VM '{vm}' headlessly..."));
