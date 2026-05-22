@@ -4,7 +4,15 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.1] - 2026-05-22
+
+### Bug Fixes
+- Raise JOIN_TIMEOUT to 1s so real fetches complete (#38) ([35ef17c](https://github.com/pallewela/rusta/commit/35ef17c18861b178366bd6a036684fc84a212a6b))
+
 ## [1.2.0] - 2026-05-22
+
+### Documentation
+- Release v1.2.0 [skip release] ([3139742](https://github.com/pallewela/rusta/commit/3139742858cb5fb1ce571888b0fc3acded5f09e6))
 
 ### Features
 - Color the update-availability notice [bump:minor] (#35) ([a8efb61](https://github.com/pallewela/rusta/commit/a8efb61982893b0bd9c73d6f9e8cec13a5c7d8bd))
