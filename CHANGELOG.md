@@ -4,10 +4,18 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.29] - 2026-05-22
+
+### Features
+- Add `rusta set-gui <vm> <on|off>` subcommand (#30) ([cdddc74](https://github.com/pallewela/rusta/commit/cdddc74e79d3d7f3eac36da6da5973c163b9900d))
+
 ## [1.0.28] - 2026-05-22
 
 ### Bug Fixes
 - Default to graphical boot for VMs without recorded preference (#28) ([2bb6568](https://github.com/pallewela/rusta/commit/2bb6568a893f07bc7d7b62f96fe2d9804e923668))
+
+### Documentation
+- Release v1.0.28 [skip release] ([1f601e4](https://github.com/pallewela/rusta/commit/1f601e4f1eedbe730c06ddfa701a3a1e74ab06c6))
 
 ## [1.0.27] - 2026-05-17
 
