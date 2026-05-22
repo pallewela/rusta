@@ -109,6 +109,9 @@ impl Harness {
         c.env("PATH", "/usr/bin:/bin:/usr/sbin:/sbin");
         c.env("HOME", &self.root);
         c.env("RUSTA_SKIP_PREFLIGHT", "1");
+        // Block the background update check unless a specific test
+        // explicitly opts in by unsetting this env var.
+        c.env("RUSTA_NO_UPDATE_CHECK", "1");
         c.env("RUSTA_STATE_ROOT", &self.state_root);
         c.env("RUSTA_SSH_DIR", &self.ssh_dir);
         c.env("RUSTA_TART_BIN", self.bin_dir.join("fake-tart"));

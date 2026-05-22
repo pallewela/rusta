@@ -11,12 +11,24 @@ pub struct State {
     pub default_vm: Option<String>,
     #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
     pub vms: BTreeMap<String, VmState>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub update: Option<UpdateState>,
 }
 
 #[derive(Debug, Default, Clone, Serialize, Deserialize)]
 pub struct VmState {
     #[serde(default)]
     pub gui: bool,
+}
+
+#[derive(Debug, Default, Clone, Serialize, Deserialize)]
+pub struct UpdateState {
+    #[serde(default)]
+    pub last_checked_at: u64,
+    #[serde(default)]
+    pub last_notified_at: u64,
+    #[serde(default)]
+    pub latest_known: Option<String>,
 }
 
 impl State {

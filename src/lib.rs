@@ -19,3 +19,4 @@ pub mod runtime;
 pub mod ssh;
 pub mod state;
 pub mod tart;
+pub mod update_check;
