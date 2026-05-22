@@ -16,7 +16,13 @@ use crate::state::State;
 
 const RELEASES_URL: &str = "https://api.github.com/repos/pallewela/rusta/releases/latest";
 const HTTP_TIMEOUT: Duration = Duration::from_secs(5);
-const JOIN_TIMEOUT: Duration = Duration::from_millis(100);
+// Long enough for a real GitHub Releases round-trip (~500 ms on a typical
+// residential connection — TLS + JSON) so the notifier thread actually
+// finishes before main exits. At 100 ms the thread was almost always
+// killed mid-fetch on fast subcommands like `rusta list`, which meant the
+// cache never warmed and the notice never printed. `HTTP_TIMEOUT` still
+// caps the worst-case wait if GitHub is unreachable.
+const JOIN_TIMEOUT: Duration = Duration::from_millis(1000);
 const NOTIFY_INTERVAL_SECS: u64 = 24 * 60 * 60;
 const CHECK_INTERVAL_SECS: u64 = 24 * 60 * 60;
 
