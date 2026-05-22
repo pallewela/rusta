@@ -4,7 +4,7 @@
 [![CodeQL](https://github.com/pallewela/rusta/actions/workflows/codeql.yml/badge.svg?branch=main)](https://github.com/pallewela/rusta/actions/workflows/codeql.yml)
 [![codecov](https://codecov.io/gh/pallewela/rusta/branch/main/graph/badge.svg)](https://codecov.io/gh/pallewela/rusta)
 [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/pallewela/rusta/badge)](https://scorecard.dev/viewer/?uri=github.com/pallewela/rusta)
-[![Release](https://img.shields.io/github/v/release/pallewela/rusta?sort=semver)](https://github.com/pallewela/rusta/releases/latest)
+[![Release](https://img.shields.io/github/v/release/pallewela/rusta)](https://github.com/pallewela/rusta/releases/latest)
 [![Last release](https://img.shields.io/github/release-date/pallewela/rusta)](https://github.com/pallewela/rusta/releases/latest)
 [![License](https://img.shields.io/github/license/pallewela/rusta)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-macOS%20arm64-blue)](#requirements)
