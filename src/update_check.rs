@@ -24,7 +24,13 @@ const HTTP_TIMEOUT: Duration = Duration::from_secs(5);
 // caps the worst-case wait if GitHub is unreachable.
 const JOIN_TIMEOUT: Duration = Duration::from_millis(1000);
 const NOTIFY_INTERVAL_SECS: u64 = 24 * 60 * 60;
-const CHECK_INTERVAL_SECS: u64 = 24 * 60 * 60;
+// 1 h, not 24 h: rusta releases can land same-day, and a 24 h cache means
+// the user waits a full day before learning about a newer release. The
+// notify-throttle (above) still caps user-visible notices at one per day;
+// this just lets the underlying check refresh more often. At up to 24
+// fetches per machine per day, we are well below GitHub's anonymous-API
+// rate limit (60/hr).
+const CHECK_INTERVAL_SECS: u64 = 60 * 60;
 
 pub fn maybe_spawn() -> Option<JoinHandle<Option<String>>> {
     if std::env::var_os("RUSTA_NO_UPDATE_CHECK").is_some() {
