@@ -4,10 +4,18 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.2] - 2026-05-22
+
+### Bug Fixes
+- Drop CHECK_INTERVAL to 1h so same-day releases surface (#39) ([b36a058](https://github.com/pallewela/rusta/commit/b36a058c066437717cb05516d420da96d0598da1))
+
 ## [1.2.1] - 2026-05-22
 
 ### Bug Fixes
 - Raise JOIN_TIMEOUT to 1s so real fetches complete (#38) ([35ef17c](https://github.com/pallewela/rusta/commit/35ef17c18861b178366bd6a036684fc84a212a6b))
+
+### Documentation
+- Release v1.2.1 [skip release] ([9b49966](https://github.com/pallewela/rusta/commit/9b49966c34bf738c529e3798ac778ca5ab5802be))
 
 ## [1.2.0] - 2026-05-22
 
