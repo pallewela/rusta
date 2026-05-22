@@ -214,3 +214,22 @@ Copy host `~/.ssh/id_*` and `~/.ssh/*.pem` files into the guest's
 - If no matching files exist, prints `[skip]` and exits 0.
 - In the guest: `mkdir -p ~/.ssh && chmod 700 ~/.ssh`, `scp`s the files,
   normalizes permissions (`*.pub` → 644, others → 600).
+
+## `rusta set-gui`
+
+```
+rusta set-gui <vm> <on|off>
+```
+
+Update the per-VM `gui` preference stored in `state.toml` for an existing
+VM, so that `rusta up <vm>` defaults to the chosen boot mode on future
+invocations.
+
+- `on` — `rusta up <vm>` boots with a graphics window by default.
+- `off` — `rusta up <vm>` boots headlessly by default.
+- Requires an explicit `<vm>`; exits 2 if the VM is not known to Tart.
+- Equivalent to the value `rusta create` writes based on whether `--gui`
+  was passed. Useful for VMs created before per-VM `gui` tracking
+  existed, or to flip an existing VM's default without recreating it.
+- Per-invocation `--gui` / `--no-gui` on `rusta up` still override the
+  stored preference.

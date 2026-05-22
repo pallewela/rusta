@@ -14,6 +14,7 @@ mod docker_setup;
 mod down;
 mod ip;
 mod list;
+mod set_gui;
 mod ssh_cmd;
 mod ssh_copy;
 mod up;
@@ -46,6 +47,7 @@ pub fn dispatch(cli: Cli) -> Result<u8> {
         Cmd::Ssh(a) => ssh_cmd::run(a),
         Cmd::DockerSetup(a) => docker_setup::run(a),
         Cmd::SshCopy(a) => ssh_copy::run(a),
+        Cmd::SetGui(a) => set_gui::run(a),
         Cmd::Completions(a) => completions::completions(a),
         Cmd::Man(a) => completions::man(a),
     }

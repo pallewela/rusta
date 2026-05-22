@@ -1,4 +1,4 @@
-use clap::{Args, Parser, Subcommand};
+use clap::{Args, Parser, Subcommand, ValueEnum};
 
 #[derive(Parser, Debug)]
 #[command(
@@ -45,6 +45,8 @@ pub enum Command {
     DockerSetup(VmOnlyArgs),
     /// Copy host ~/.ssh/id_* and *.pem into the VM
     SshCopy(VmOnlyArgs),
+    /// Set whether `rusta up <vm>` boots with a graphics window by default
+    SetGui(SetGuiArgs),
     /// Print a shell completion script to stdout
     #[command(hide = true)]
     Completions(CompletionsArgs),
@@ -150,6 +152,22 @@ pub struct SshArgs {
     /// Remote command (after `--`)
     #[arg(last = true)]
     pub remote: Vec<String>,
+}
+
+#[derive(ValueEnum, Clone, Copy, Debug, PartialEq, Eq)]
+pub enum GuiMode {
+    /// `rusta up <vm>` boots with a graphics window by default
+    On,
+    /// `rusta up <vm>` boots headlessly by default
+    Off,
+}
+
+#[derive(Args, Debug)]
+pub struct SetGuiArgs {
+    /// VM whose recorded `gui` preference will be updated
+    pub vm: String,
+    /// Desired default boot mode for this VM
+    pub mode: GuiMode,
 }
 
 #[cfg(test)]

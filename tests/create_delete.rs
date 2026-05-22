@@ -164,3 +164,63 @@ fn delete_force_running_stops_and_deletes() {
     assert_eq!(code(&out), 0);
     assert!(h.vm_state("lab").is_none());
 }
+
+#[test]
+fn set_gui_off_records_false_for_existing_vm() {
+    let h = Harness::new();
+    h.add_vm("lab", "stopped");
+    let out = h.run(&["set-gui", "lab", "off"]);
+    assert_eq!(code(&out), 0, "stderr: {}", stderr(&out));
+    let s = std::fs::read_to_string(h.state_root.join("state.toml")).unwrap();
+    assert!(s.contains("[vms.lab]"), "state.toml: {s}");
+    assert!(s.contains("gui = false"), "state.toml: {s}");
+}
+
+#[test]
+fn set_gui_on_records_true_for_existing_vm() {
+    let h = Harness::new();
+    h.add_vm("lab", "stopped");
+    let out = h.run(&["set-gui", "lab", "on"]);
+    assert_eq!(code(&out), 0, "stderr: {}", stderr(&out));
+    let s = std::fs::read_to_string(h.state_root.join("state.toml")).unwrap();
+    assert!(s.contains("gui = true"), "state.toml: {s}");
+}
+
+#[test]
+fn set_gui_overrides_previous_preference() {
+    let h = Harness::new();
+    let out = h.run(&["create", "lab", "--gui"]);
+    assert_eq!(code(&out), 0);
+    let out = h.run(&["set-gui", "lab", "off"]);
+    assert_eq!(code(&out), 0);
+    let s = std::fs::read_to_string(h.state_root.join("state.toml")).unwrap();
+    assert!(s.contains("gui = false"), "state.toml: {s}");
+}
+
+#[test]
+fn set_gui_off_makes_up_default_headless() {
+    let h = Harness::new();
+    h.add_vm("lab", "stopped");
+    let out = h.run(&["set-gui", "lab", "off"]);
+    assert_eq!(code(&out), 0);
+    let out = h.run(&["up", "lab"]);
+    assert_eq!(code(&out), 0);
+    let argv = h.last_run_args().expect("run logged");
+    assert!(argv.iter().any(|a| a == "--no-graphics"), "argv: {argv:?}");
+}
+
+#[test]
+fn set_gui_unknown_vm_returns_2() {
+    let h = Harness::new();
+    let out = h.run(&["set-gui", "ghost", "off"]);
+    assert_eq!(code(&out), 2);
+}
+
+#[test]
+fn set_gui_rejects_invalid_mode() {
+    let h = Harness::new();
+    h.add_vm("lab", "stopped");
+    let out = h.run(&["set-gui", "lab", "maybe"]);
+    assert_ne!(code(&out), 0);
+    assert!(!stderr(&out).is_empty());
+}
