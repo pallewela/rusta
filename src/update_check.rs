@@ -126,9 +126,33 @@ fn notify_if_due(latest: &str) {
 
 fn print_notice(latest: &str, current: &str) {
     let cmd = upgrade_command();
+    let (bold_green, dim, reset) = if color_enabled() {
+        ("\x1b[1;32m", "\x1b[2m", "\x1b[0m")
+    } else {
+        ("", "", "")
+    };
     eprintln!();
-    eprintln!("  rusta {latest} is available (you have {current}). {cmd}");
-    eprintln!("  Silence: RUSTA_NO_UPDATE_CHECK=1");
+    eprintln!("  rusta {bold_green}{latest}{reset} is available (you have {current}). {cmd}");
+    eprintln!("  {dim}Silence: RUSTA_NO_UPDATE_CHECK=1{reset}");
+}
+
+/// Color is enabled when stderr is a TTY *and* `NO_COLOR` is unset *and*
+/// `TERM != dumb`. The `RUSTA_UPDATE_PRETEND_TTY` test seam from #32
+/// flows through so integration tests can exercise the color path even
+/// though their captured stderr is a pipe.
+fn color_enabled() -> bool {
+    let tty = std::env::var_os("RUSTA_UPDATE_PRETEND_TTY").is_some()
+        || std::io::stderr().is_terminal();
+    if !tty {
+        return false;
+    }
+    if std::env::var_os("NO_COLOR").is_some() {
+        return false;
+    }
+    if std::env::var("TERM").as_deref() == Ok("dumb") {
+        return false;
+    }
+    true
 }
 
 fn upgrade_command() -> String {
@@ -297,6 +321,55 @@ mod tests {
         assert!(!is_prerelease("v1.0.0"));
         // Build metadata is not pre-release.
         assert!(!is_prerelease("1.0.0+sha.abc"));
+    }
+
+    #[test]
+    fn color_enabled_decision_matrix() {
+        let _g = ENV_LOCK.lock().unwrap();
+        // Snapshot the four env vars we touch, restore on drop.
+        let prev_pretend = std::env::var_os("RUSTA_UPDATE_PRETEND_TTY");
+        let prev_no_color = std::env::var_os("NO_COLOR");
+        let prev_term = std::env::var_os("TERM");
+        // Clear them all so the baseline is deterministic.
+        std::env::remove_var("RUSTA_UPDATE_PRETEND_TTY");
+        std::env::remove_var("NO_COLOR");
+        std::env::remove_var("TERM");
+
+        // Baseline: stderr is almost certainly a pipe under `cargo test` —
+        // without PRETEND_TTY we expect color_enabled() == false.
+        assert!(!color_enabled(), "no TTY, no PRETEND_TTY → no color");
+
+        // PRETEND_TTY alone → color on.
+        std::env::set_var("RUSTA_UPDATE_PRETEND_TTY", "1");
+        assert!(color_enabled(), "PRETEND_TTY=1 → color on");
+
+        // NO_COLOR set to *anything* (including empty) → color off.
+        std::env::set_var("NO_COLOR", "1");
+        assert!(!color_enabled(), "NO_COLOR=1 → color off");
+        std::env::set_var("NO_COLOR", "");
+        assert!(!color_enabled(), "NO_COLOR='' (set but empty) still → color off");
+        std::env::remove_var("NO_COLOR");
+
+        // TERM=dumb → color off.
+        std::env::set_var("TERM", "dumb");
+        assert!(!color_enabled(), "TERM=dumb → color off");
+        // Other TERM values are fine.
+        std::env::set_var("TERM", "xterm-256color");
+        assert!(color_enabled(), "TERM=xterm-256color → color on");
+
+        // Restore.
+        match prev_pretend {
+            Some(v) => std::env::set_var("RUSTA_UPDATE_PRETEND_TTY", v),
+            None => std::env::remove_var("RUSTA_UPDATE_PRETEND_TTY"),
+        }
+        match prev_no_color {
+            Some(v) => std::env::set_var("NO_COLOR", v),
+            None => std::env::remove_var("NO_COLOR"),
+        }
+        match prev_term {
+            Some(v) => std::env::set_var("TERM", v),
+            None => std::env::remove_var("TERM"),
+        }
     }
 
     use std::sync::Mutex;
