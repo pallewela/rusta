@@ -5,6 +5,10 @@ use common::{stderr, Harness};
 /// flip that off and inject the test seams: `RUSTA_UPDATE_PRETEND_TTY=1` to
 /// bypass the real-TTY check (captured stderr is a pipe), and
 /// `RUSTA_UPDATE_FORCE_LATEST=<version>` to fake the network response.
+///
+/// Also normalizes the color-decision env: removes any inherited `NO_COLOR`
+/// and forces `TERM=xterm-256color` so a developer's shell environment can't
+/// flip the notice between color and plain output across runs.
 fn run_with_notifier(
     h: &Harness,
     args: &[&str],
@@ -13,6 +17,8 @@ fn run_with_notifier(
 ) -> std::process::Output {
     let mut c = h.cmd(args);
     c.env_remove("RUSTA_NO_UPDATE_CHECK");
+    c.env_remove("NO_COLOR");
+    c.env("TERM", "xterm-256color");
     c.env("RUSTA_UPDATE_PRETEND_TTY", "1");
     c.env("RUSTA_INSTALL_KIND", install_kind);
     if let Some(v) = force_latest {
@@ -155,4 +161,76 @@ fn state_file_records_check_and_notification_timestamps() {
     assert!(s.contains("last_checked_at"), "state.toml: {s}");
     assert!(s.contains("last_notified_at"), "state.toml: {s}");
     assert!(s.contains(&format!("latest_known = \"{newer}\"")), "state.toml: {s}");
+}
+
+const CSI: &str = "\x1b[";
+
+#[test]
+fn notice_uses_ansi_color_when_enabled() {
+    let h = Harness::new();
+    let newer = bumped_patch();
+    let out = run_with_notifier(&h, &["list"], Some(&newer), "homebrew");
+    let s = stderr(&out);
+    assert!(s.contains(CSI), "expected ANSI escapes in stderr: {s:?}");
+    // Bold green wraps the available version.
+    assert!(s.contains(&format!("\x1b[1;32m{newer}\x1b[0m")), "stderr: {s:?}");
+    // Dim wraps the silence hint.
+    assert!(
+        s.contains("\x1b[2mSilence: RUSTA_NO_UPDATE_CHECK=1\x1b[0m"),
+        "stderr: {s:?}"
+    );
+}
+
+#[test]
+fn notice_has_no_ansi_when_no_color_env_set() {
+    let h = Harness::new();
+    let newer = bumped_patch();
+    let mut c = h.cmd(&["list"]);
+    c.env_remove("RUSTA_NO_UPDATE_CHECK");
+    c.env("RUSTA_UPDATE_PRETEND_TTY", "1");
+    c.env("RUSTA_UPDATE_FORCE_LATEST", &newer);
+    c.env("RUSTA_INSTALL_KIND", "homebrew");
+    c.env("TERM", "xterm-256color");
+    c.env("NO_COLOR", "1");
+    let out = c.output().expect("spawn rusta");
+    let s = stderr(&out);
+    // Notice still prints in plaintext.
+    assert!(s.contains("is available"), "stderr: {s:?}");
+    // But no ANSI escapes anywhere.
+    assert!(!s.contains(CSI), "expected no ANSI escapes in stderr: {s:?}");
+}
+
+#[test]
+fn notice_has_no_ansi_when_no_color_set_to_empty_string() {
+    // Per https://no-color.org, NO_COLOR being *set at all* (even empty) disables.
+    let h = Harness::new();
+    let newer = bumped_patch();
+    let mut c = h.cmd(&["list"]);
+    c.env_remove("RUSTA_NO_UPDATE_CHECK");
+    c.env("RUSTA_UPDATE_PRETEND_TTY", "1");
+    c.env("RUSTA_UPDATE_FORCE_LATEST", &newer);
+    c.env("RUSTA_INSTALL_KIND", "homebrew");
+    c.env("TERM", "xterm-256color");
+    c.env("NO_COLOR", "");
+    let out = c.output().expect("spawn rusta");
+    let s = stderr(&out);
+    assert!(s.contains("is available"), "stderr: {s:?}");
+    assert!(!s.contains(CSI), "expected no ANSI escapes in stderr: {s:?}");
+}
+
+#[test]
+fn notice_has_no_ansi_when_term_dumb() {
+    let h = Harness::new();
+    let newer = bumped_patch();
+    let mut c = h.cmd(&["list"]);
+    c.env_remove("RUSTA_NO_UPDATE_CHECK");
+    c.env_remove("NO_COLOR");
+    c.env("RUSTA_UPDATE_PRETEND_TTY", "1");
+    c.env("RUSTA_UPDATE_FORCE_LATEST", &newer);
+    c.env("RUSTA_INSTALL_KIND", "homebrew");
+    c.env("TERM", "dumb");
+    let out = c.output().expect("spawn rusta");
+    let s = stderr(&out);
+    assert!(s.contains("is available"), "stderr: {s:?}");
+    assert!(!s.contains(CSI), "expected no ANSI escapes in stderr: {s:?}");
 }
