@@ -33,12 +33,12 @@ jobs:
       - uses: Swatinem/rust-cache@e18b497796c12c097a38f9edb9d0641fb99eee32  # v2
 
       - name: Install cargo-llvm-cov
-        uses: taiki-e/install-action@3771e22aa892e03fd35585fae288baad1755695c  # v2
+        uses: taiki-e/install-action@6c1f7cf125e42770ff087ea443901b487cc5471a  # v2
         with:
           tool: cargo-llvm-cov
 
       - name: Install cargo-deny
-        uses: taiki-e/install-action@3771e22aa892e03fd35585fae288baad1755695c  # v2
+        uses: taiki-e/install-action@6c1f7cf125e42770ff087ea443901b487cc5471a  # v2
         with:
           tool: cargo-deny
 
