@@ -4,10 +4,24 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.3] - 2026-05-23
+
+### Dependencies
+- Bump actions/download-artifact from 4.3.0 to 8.0.1 (#46) ([7bfc693](https://github.com/pallewela/rusta/commit/7bfc693a1c41b5a2e45ba2b8269510fc44f9a717))
+- Bump taiki-e/install-action from 2.78.2 to 2.79.5 (#43) ([f49c615](https://github.com/pallewela/rusta/commit/f49c615d004d7f488d3650e8a9693daf70e632ce))
+- Bump github/codeql-action from 3.35.5 to 4.36.0 (#45) ([7dae6c6](https://github.com/pallewela/rusta/commit/7dae6c6fabaf3fc8fef6de08f7acbd47809828fa))
+- Bump actions/upload-artifact from 4.6.2 to 7.0.1 (#44) ([e4853b7](https://github.com/pallewela/rusta/commit/e4853b7660512882c03a0056805809b31364bf17))
+- Bump clap_mangen from 0.2.33 to 0.3.0 (#42) ([c16a07e](https://github.com/pallewela/rusta/commit/c16a07e29175e0f2845a0470e93e9a1d9d1052d7))
+- Bump serde_json in the cargo-minor-and-patch group (#41) ([b026145](https://github.com/pallewela/rusta/commit/b026145d23aeb239f888021117988b96904940ff))
+- Bump codecov/codecov-action from 5.5.4 to 6.0.1 (#40) ([57799dd](https://github.com/pallewela/rusta/commit/57799dd51c6a091b00b4360c33bd9bef935d0e51))
+
 ## [1.2.2] - 2026-05-22
 
 ### Bug Fixes
 - Drop CHECK_INTERVAL to 1h so same-day releases surface (#39) ([b36a058](https://github.com/pallewela/rusta/commit/b36a058c066437717cb05516d420da96d0598da1))
+
+### Documentation
+- Release v1.2.2 [skip release] ([54a8c53](https://github.com/pallewela/rusta/commit/54a8c539160cd6d7cb881b7e87796fb91f263aba))
 
 ## [1.2.1] - 2026-05-22
 
