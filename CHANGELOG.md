@@ -4,6 +4,11 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.4] - 2026-05-30
+
+### Dependencies
+- Bump taiki-e/install-action from 2.79.5 to 2.79.14 (#47) ([13a4008](https://github.com/pallewela/rusta/commit/13a40083aa4bcb7dc08bf3c6f663eadcd6dfb3ae))
+
 ## [1.2.3] - 2026-05-23
 
 ### Dependencies
@@ -14,6 +19,9 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Bump clap_mangen from 0.2.33 to 0.3.0 (#42) ([c16a07e](https://github.com/pallewela/rusta/commit/c16a07e29175e0f2845a0470e93e9a1d9d1052d7))
 - Bump serde_json in the cargo-minor-and-patch group (#41) ([b026145](https://github.com/pallewela/rusta/commit/b026145d23aeb239f888021117988b96904940ff))
 - Bump codecov/codecov-action from 5.5.4 to 6.0.1 (#40) ([57799dd](https://github.com/pallewela/rusta/commit/57799dd51c6a091b00b4360c33bd9bef935d0e51))
+
+### Documentation
+- Release v1.2.3 [skip release] ([eeeaf8c](https://github.com/pallewela/rusta/commit/eeeaf8cd71c634726c38b08281be950e70886f4c))
 
 ## [1.2.2] - 2026-05-22
 
