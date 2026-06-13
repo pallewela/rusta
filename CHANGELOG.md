@@ -4,12 +4,21 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.6] - 2026-06-13
+
+### Dependencies
+- Bump taiki-e/install-action from 2.81.6 to 2.81.10 (#51) ([d3836eb](https://github.com/pallewela/rusta/commit/d3836eb091f4a2e2802a0b3ec864d8fec562fe9d))
+- Bump codecov/codecov-action from 6.0.1 to 7.0.0 (#52) ([adfa96d](https://github.com/pallewela/rusta/commit/adfa96d1f6132e3ad6ab794857ba653c2d0c0c88))
+
 ## [1.2.5] - 2026-06-06
 
 ### Dependencies
 - Bump actions/checkout from 6.0.2 to 6.0.3 (#50) ([9db512c](https://github.com/pallewela/rusta/commit/9db512c01b0d8db61d89e7a0c58faea4a159f942))
 - Bump github/codeql-action from 4.36.0 to 4.36.2 (#49) ([65da8a8](https://github.com/pallewela/rusta/commit/65da8a8e160446f4115a144e9fe3a4ef223f0ea5))
 - Bump taiki-e/install-action from 2.79.14 to 2.81.6 (#48) ([301e156](https://github.com/pallewela/rusta/commit/301e156ab238ce8fa4ec28ab7789600e2ab15432))
+
+### Documentation
+- Release v1.2.5 [skip release] ([f4c4ab4](https://github.com/pallewela/rusta/commit/f4c4ab4015f844c0c6fa99a7eb568ae7eb8d77e9))
 
 ## [1.2.4] - 2026-05-30
 
