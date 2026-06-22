@@ -12,11 +12,70 @@
 
 #![allow(dead_code)]
 
+use std::io::{Read, Write};
+use std::net::TcpListener;
 use std::os::unix::fs::PermissionsExt;
 use std::path::{Path, PathBuf};
 use std::process::{Command, Output};
+use std::sync::{Arc, Mutex};
+use std::thread;
 
 use tempfile::TempDir;
+
+/// A tiny single-thread HTTP server mimicking ghcr.io for `versions`/`create`
+/// resolution. Responds to two paths:
+///   GET …/token → the supplied token body
+///   GET …/tags  → the supplied tags body
+pub struct MockGhcr {
+    addr: String,
+    _handle: thread::JoinHandle<()>,
+    _stop: Arc<Mutex<bool>>,
+}
+
+impl MockGhcr {
+    pub fn start(tags_body: &'static str, token_body: &'static str) -> Self {
+        let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+        let addr = format!("http://{}", listener.local_addr().unwrap());
+        let stop = Arc::new(Mutex::new(false));
+        let stop_c = stop.clone();
+        let h = thread::spawn(move || {
+            listener.set_nonblocking(false).unwrap();
+            // Serve plenty of requests for a multi-source call.
+            for _ in 0..40 {
+                if *stop_c.lock().unwrap() {
+                    break;
+                }
+                let (mut sock, _) = match listener.accept() {
+                    Ok(p) => p,
+                    Err(_) => continue,
+                };
+                let mut buf = [0u8; 4096];
+                let n = sock.read(&mut buf).unwrap_or(0);
+                let req = String::from_utf8_lossy(&buf[..n]).to_string();
+                let body = if req.contains("/token") {
+                    token_body
+                } else {
+                    tags_body
+                };
+                let resp = format!(
+                    "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{}",
+                    body.len(),
+                    body
+                );
+                let _ = sock.write_all(resp.as_bytes());
+            }
+        });
+        Self { addr, _handle: h, _stop: stop }
+    }
+
+    pub fn token_url(&self) -> String {
+        format!("{}/token", self.addr)
+    }
+
+    pub fn tags_url(&self) -> String {
+        format!("{}/tags", self.addr)
+    }
+}
 
 pub struct Harness {
     pub _dir: TempDir,
