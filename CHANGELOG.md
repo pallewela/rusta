@@ -4,12 +4,20 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2026-06-22
+
+### Features
+- Configurable image sources and image names [bump:minor] (#56) ([edd1d38](https://github.com/pallewela/rusta/commit/edd1d3807edebc288bfac019be54a60b558dbc31))
+
 ## [1.2.7] - 2026-06-20
 
 ### Dependencies
 - Bump actions/checkout from 6.0.3 to 7.0.0 (#55) ([4608d34](https://github.com/pallewela/rusta/commit/4608d3451f00b5944eb070b549e016dfc300c01d))
 - Bump softprops/action-gh-release from 3.0.0 to 3.0.1 (#54) ([3e88c85](https://github.com/pallewela/rusta/commit/3e88c851f2067bd77f56e4f3231490f5f9fccfd6))
 - Bump taiki-e/install-action from 2.81.10 to 2.82.0 (#53) ([78d142f](https://github.com/pallewela/rusta/commit/78d142f5c567e42766032770b7cb8cc155c6da89))
+
+### Documentation
+- Release v1.2.7 [skip release] ([3a4a719](https://github.com/pallewela/rusta/commit/3a4a719197e93c5dff72d2872cd24b4f57c3347d))
 
 ## [1.2.6] - 2026-06-13
 
