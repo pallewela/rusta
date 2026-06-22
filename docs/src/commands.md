@@ -78,7 +78,8 @@ Clone + provision a new Ubuntu VM.
 
 | Flag                    | Default                | Description                                                              |
 | ----------------------- | ---------------------- | ------------------------------------------------------------------------ |
-| `--version <ver>`       | `24.04`                | Ubuntu release line (OCI tag on `ghcr.io/cirruslabs/ubuntu`).            |
+| `--version <ver>`       | `24.04`                | Ubuntu release line (OCI tag), resolved across configured sources.       |
+| `--image <name>`        | first image            | Image family (repo) to clone, e.g. `ubuntu-desktop`; defaults to the first configured image. Composes with `--source`. |
 | `--gui [pkg]`           | off / `ubuntu-desktop` | Install a desktop (`ubuntu-desktop`, `xubuntu-desktop`, `lubuntu-desktop`, `lightdm`). |
 | `--cpus <n>`            | `6`                    | CPU count.                                                               |
 | `--memory <mb>`         | `8192`                 | Memory in MB.                                                            |
@@ -87,14 +88,18 @@ Clone + provision a new Ubuntu VM.
 | `--password <password>` | `admin`                | Guest login password used by `sshpass`.                                  |
 | `--ssh-copy-keys`       | off                    | After provisioning, copy host SSH keys into the guest.                   |
 | `--debug-no-headless`   | off                    | Run with a graphics window during provisioning (debug only).             |
+| `--source <registry>`   | (all sources)          | Pin resolution to one configured source (registry prefix or label).      |
+| `--image-ref <ref>`     | (unset)                | Clone this exact image reference verbatim, bypassing sources and images. Conflicts with `--source` and `--image`. |
 
 `rusta create` never assumes a name: if `<vm>` is omitted and stdin is a
-TTY it prompts (suggesting `ubuntu-<version>` based on `--version`); a
-non-TTY stdin exits 1. The chosen name is **not** written to
-`state.default_vm`.
+TTY it prompts (suggesting `<image>-<version>`, e.g. `ubuntu-2404` or
+`ubuntu-desktop-2404`); a non-TTY stdin exits 1. The chosen name is **not**
+written to `state.default_vm`.
 
 If the VM name already exists, creation is skipped and a recreate hint is
-printed. Otherwise, `rusta` clones the OCI image, sets CPU/memory/disk,
+printed. Otherwise, `rusta` resolves which image to clone (the selected
+[image](#rusta-image) across configured [sources](#rusta-source)), clones it,
+sets CPU/memory/disk,
 generates a provisioning script under
 `~/.local/share/rusta/provision/<vm>.sh`, boots, runs the script, and
 shuts the VM down.
@@ -131,18 +136,100 @@ lab-22        stopped
 ## `rusta versions`
 
 ```
-rusta versions
+rusta versions [--source <registry>] [--image <name>]
 ```
 
-List available Ubuntu OCI tags from `ghcr.io/cirruslabs/ubuntu`:
+List the available OCI tags across the configured **sources × images** matrix
+(see [`rusta source`](#rusta-source) and [`rusta image`](#rusta-image)). For each
+`(source, image)` cell, `rusta` fetches a pull token and lists tags from
+`<host>/v2/<namespace>/<image>/tags/list`, keeps `X.Y` tags, then merges and
+sorts them, highlighting `24.04` as `(default)`.
 
-1. Fetch an anonymous pull token from `ghcr.io/token`.
-2. List tags from `ghcr.io/v2/cirruslabs/ubuntu/tags/list`.
-3. Filter to tags matching `^\d+\.\d+$`, sort ascending, print one per
-   line.
-4. Highlight `24.04` as `(default)`.
+- With a single source **and** a single image the list is unannotated (legacy
+  format).
+- With multiple sources but one image, each tag shows which source(s) provide it;
+  on a conflict, the one `create` would pick (first by priority) is noted
+  (`(create uses <label>)`).
+- With multiple images, each tag line groups providers by image:
+  `<image>: <src>, <src>  (create uses <src>)`.
+- `--source <registry>` limits output to one source; `--image <name>` limits it
+  to one image. They compose.
+- A source whose **host is unreachable** is skipped with a warning; a source that
+  simply **lacks an image** is a silent empty cell. `versions` only fails (exit 1)
+  when **no** cell produces any result.
 
-Token/list failures are fatal (exit 1).
+```
+$ rusta versions
+22.04   ubuntu: cirruslabs, pallewela  (create uses cirruslabs)
+24.04 (default)   ubuntu: cirruslabs   ubuntu-desktop: pallewela
+25.04   ubuntu-desktop: pallewela
+```
+
+## `rusta source`
+
+```
+rusta source                              # list (default action)
+rusta source add <registry>               # e.g. ghcr.io/pallewela
+rusta source rm <registry>
+rusta source move <registry> <position>   # 1-based priority
+```
+
+Manage the **image sources** that `create` and `versions` consider. A source is a
+registry host + namespace prefix (e.g. `ghcr.io/cirruslabs`); rusta appends the
+selected [image](#rusta-image) (`ubuntu` by default) to form the repository.
+Sources are an ordered list — **position is priority**, and the first source
+advertising a requested version wins.
+
+- When no sources are configured, rusta uses a built-in default of
+  `ghcr.io/cirruslabs`, preserving the original behavior. Adding your first source
+  materializes that default ahead of it, so `create` still finds the stock images.
+- `add` validates the prefix (a trailing `/ubuntu` is stripped; a tag is rejected).
+  **Only `ghcr.io` is supported for now**; other registries are rejected (you can
+  still clone any image once-off with `rusta create --image-ref <ref>`).
+- `rm` of the last remaining source re-seeds the default — rusta is never
+  sourceless. `rm`/`move` of an unknown source exit 2.
+
+```
+$ rusta source add ghcr.io/pallewela
+  [ok] Added source: ghcr.io/pallewela
+$ rusta source list
+==> Image sources (priority order):
+  1. ghcr.io/cirruslabs  (cirruslabs)
+  2. ghcr.io/pallewela  (pallewela)
+```
+
+## `rusta image`
+
+```
+rusta image                              # list (default action)
+rusta image add <name>                   # e.g. ubuntu-desktop
+rusta image rm <name>
+rusta image move <name> <position>       # 1-based priority
+```
+
+Manage the **image names** (repositories) that rusta clones under each source. An
+image is a single repository segment (e.g. `ubuntu`, `ubuntu-desktop`); the
+namespace comes from the source. Images are a global, ordered list — **position is
+priority**, and the **first image is the `create` default**.
+
+- When no images are configured, rusta uses built-in defaults of `ubuntu` and
+  `ubuntu-desktop` (with `ubuntu` as the create default). Adding your first image
+  materializes those defaults ahead of it.
+- The list is **global** (applied to every source). `rusta create --image <name>`
+  picks one for a run; `versions` enumerates the full sources × images matrix.
+- `add` validates the name (a single segment: no `/`, no `:` tag, lowercase). A
+  source that doesn't host an image is just skipped — not an error.
+- `rm` of the last remaining image re-seeds the defaults — rusta is never imageless.
+  `rm`/`move` of an unknown image exit 2.
+
+```
+$ rusta image list
+==> Images (priority order; first is the create default):
+  1. ubuntu  (default)
+  2. ubuntu-desktop
+$ rusta image add ubuntu-kairos
+  [ok] Added image: ubuntu-kairos
+```
 
 ## `rusta default`
 

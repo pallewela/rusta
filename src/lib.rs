@@ -15,6 +15,7 @@ pub mod io;
 pub mod paths;
 pub mod picker;
 pub mod provision;
+pub mod registry;
 pub mod runtime;
 pub mod ssh;
 pub mod state;

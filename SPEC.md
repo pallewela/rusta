@@ -55,7 +55,9 @@ Accepted by every subcommand:
 | `rusta create [<vm>]`            | Create + provision a new Ubuntu VM.                           |
 | `rusta delete <vm>`              | Delete a VM (Tart state). Requires confirmation or `--yes`.   |
 | `rusta list`                     | List Tart VMs and indicate the current default.               |
-| `rusta versions`                 | List available Ubuntu OCI tags from `ghcr.io/cirruslabs/ubuntu`. |
+| `rusta versions`                 | List available OCI tags across configured sources × images.   |
+| `rusta source [add\|rm\|move]`   | Manage the image sources images are cloned from (see §4.12).   |
+| `rusta image [add\|rm\|move]`    | Manage the image names (repos) cloned under each source (§4.13).|
 | `rusta default [<vm>]`           | Print or set the default VM.                                  |
 | `rusta ip [<vm>]`                | Print the guest IP of the VM.                                 |
 | `rusta ssh [<vm>] [-- cmd...]`   | Open an SSH session (or run a command) on the VM.             |
@@ -89,10 +91,23 @@ All subcommands that take `<vm>` accept it as a positional. If omitted, the
 
   [vms.ubuntu-2404]
   gui = false
+
+  [[sources]]
+  registry = "ghcr.io/cirruslabs"
+
+  [[sources]]
+  registry = "ghcr.io/pallewela"
+
+  images = ["ubuntu", "ubuntu-desktop"]
   ```
   `vms.<name>.gui` records the `--gui` choice from `rusta create`. Used
   by `rusta up` to pick the default boot mode (§4.1). VMs created before
   this feature have no `[vms.<name>]` entry and default to headless boot.
+  `[[sources]]` is the ordered list of image sources (§4.12); an absent or
+  empty list means the seeded `ghcr.io/cirruslabs` default.
+  `images` is the ordered list of image names (§4.13); an absent or empty
+  list means the seeded `["ubuntu", "ubuntu-desktop"]` defaults. The first
+  image (`ubuntu`) is the `create` default.
 
 ### 3.2 Resolution rule
 
@@ -196,7 +211,8 @@ Flags:
 
 | Flag                    | Default          | Description                                                                   |
 | ----------------------- | ---------------- | ----------------------------------------------------------------------------- |
-| `--version <ver>`       | `24.04`          | Ubuntu release line (OCI tag on `ghcr.io/cirruslabs/ubuntu`).                 |
+| `--version <ver>`       | `24.04`          | Ubuntu release line (OCI tag); resolved against configured sources (§4.12).   |
+| `--image <name>`        | first image      | Image family (repo) to clone, e.g. `ubuntu-desktop`; defaults to the first configured image (§4.13). Composes with `--source`. |
 | `--gui [pkg]`           | off / `ubuntu-desktop` | Install a desktop. Allowed: `ubuntu-desktop`, `xubuntu-desktop`, `lubuntu-desktop`, `lightdm`. |
 | `--cpus <n>`            | `6`              | CPU count.                                                                    |
 | `--memory <mb>`         | `8192`           | Memory in MB.                                                                 |
@@ -205,13 +221,16 @@ Flags:
 | `--password <password>` | `admin`          | Guest login password used by `sshpass`.                                       |
 | `--ssh-copy-keys`       | off              | After provisioning, copy host SSH keys into the guest (see §4.10).            |
 | `--debug-no-headless`   | off              | Run with a graphics window during provisioning (debug only).                  |
+| `--source <registry>`   | (all sources)    | Pin resolution to one configured source, by registry prefix or label (§4.12). |
+| `--image-ref <ref>`     | (unset)          | Clone this exact image reference verbatim, bypassing source + image resolution. Conflicts with `--source` and `--image`. |
 
 Positional `<vm>` is the VM name. **`rusta create` never assumes a name**:
 the default-VM mechanism (§3) does not apply, since `create` is producing a
 new VM, not selecting an existing one. If `<vm>` is omitted:
 
 - If stdin is a TTY, **interactively prompt** for the name, offering
-  `ubuntu-<UBUNTU_VERSION_NODOT>` (e.g. `--version 22.04` → `ubuntu-2204`)
+  `<image>-<UBUNTU_VERSION_NODOT>` (e.g. default image + `--version 22.04`
+  → `ubuntu-2204`; `--image ubuntu-desktop` → `ubuntu-desktop-2204`)
   as a suggested default the user can accept with an empty line:
   ```
   VM name [ubuntu-2404]:
@@ -231,7 +250,12 @@ Behavior:
 3. If the VM name already exists, **skip creation** and print a recreate
    hint (`rusta delete <vm> && rusta create <vm> ...`); no re-provisioning.
 4. Otherwise:
-   - `tart clone ghcr.io/cirruslabs/ubuntu:<version> <vm>`.
+   - Determine the **image** (§4.13): `--image <name>` if given, else the first
+     configured image (`ubuntu` by default).
+   - Resolve the image reference to clone (§4.12): `--image-ref` verbatim, else
+     the first configured source (in priority order) that advertises
+     `<image>:<version>`.
+   - `tart clone <resolved-ref> <vm>` (e.g. `ghcr.io/cirruslabs/ubuntu:<version>`).
    - `tart set <vm> --cpu <n> --memory <mb> --disk-size <gb>`.
    - Generate `~/.local/share/rusta/provision/<vm>.sh` (kept for debugging).
    - Boot headlessly (or with window under `--debug-no-headless`).
@@ -266,16 +290,32 @@ lab-22        stopped
 The `DEFAULT` column shows `*` next to the resolved default. Exits 0 even
 if there are no VMs.
 
-### 4.6 `rusta versions`
+### 4.6 `rusta versions [--source <registry>] [--image <name>]`
 
-List Ubuntu OCI tags from `ghcr.io/cirruslabs/ubuntu`:
+List the available OCI tags across the configured **sources × images** matrix
+(§4.12, §4.13). For each `(source, image)` cell's `<registry>/<image>` repository:
 
-1. Fetch an anonymous pull token from `ghcr.io/token`.
-2. List tags from `ghcr.io/v2/cirruslabs/ubuntu/tags/list`.
-3. Filter to tags matching `^\d+\.\d+$`, sort ascending, print one per line.
-4. Highlight `24.04` as `(default)`.
+1. Fetch an anonymous pull token from `<host>/token`.
+2. List tags from `<host>/v2/<namespace>/<image>/tags/list`.
+3. Filter to tags matching `^\d+\.\d+$`.
 
-Token/list failures are fatal (exit 1).
+Then merge, sort ascending, and print one per line, highlighting `24.04` as
+`(default)`.
+
+- With a **single** source **and** a single image, output is unannotated (one
+  tag per line) — the legacy format.
+- With multiple sources but a single image, each tag is annotated with the
+  providing source label(s); when more than one source offers a tag, the one
+  `create` would pick (first in priority order) is noted (`(create uses <label>)`).
+- With **multiple images**, each tag line groups providers by image (in image
+  priority order): `<image>: <src>, <src>  (create uses <src>)`. An image with
+  no provider for a tag is omitted from that line.
+- `--source <registry>` limits output to a single configured source (by registry
+  prefix or label); `--image <name>` limits output to a single image. They compose.
+- A `(source, image)` cell where the source **host is unreachable** is skipped
+  with a warning. A cell where the source simply **lacks that image** (e.g. a 404)
+  is a silent empty cell, not a failure. `versions` exits 1 only when **no** cell
+  produced any result.
 
 ### 4.7 `rusta default [<vm>]`
 
@@ -330,6 +370,82 @@ Install Docker Engine inside an existing VM and wire host-side
   `ssh://<user>@docker-<vm>`.
 - Prints a summary including the SSH alias, the context name, the
   three-step usage hint, and the IP-pinning caveat.
+
+### 4.12 `rusta source [list | add <registry> | rm <registry> | move <registry> <pos>]`
+
+Manage the **image sources** that `create` and `versions` consider. A source is a
+registry host + namespace prefix (e.g. `ghcr.io/cirruslabs`); rusta appends the
+selected image name (§4.13, `ubuntu` by default) to form the repository. Sources
+are an **ordered list** stored in the state file (§3.1) under `[[sources]]`; list
+position is **priority**.
+
+Model and resolution rules:
+
+- **Seeded default.** When no sources are configured, rusta behaves as if a single
+  source `ghcr.io/cirruslabs` were present, preserving prior single-source
+  behavior. The default is materialized into the state file on the first mutation.
+- **Conflict rule.** When a requested version exists in more than one source, the
+  first source in priority (config) order wins.
+- **`create` resolution.** With a single candidate source, the reference is built
+  directly with no registry query. With two or more, each source's tags are
+  queried (token + tag-list, as in §4.6) and the first advertising the version
+  wins; unreachable sources are skipped with a warning. If no reachable source
+  offers the version, `create` errors (exit 1) and creates nothing.
+- **ghcr.io only (v1).** `add` accepts only `ghcr.io` hosts; other registries are
+  rejected. `tart clone` itself works with any registry via `--image-ref`, but tag
+  listing/aggregation is ghcr-specific for now.
+
+Subactions:
+
+- `list` (default when no subaction) — print configured sources in priority order;
+  notes when the built-in default is in effect.
+- `add <registry>` — validate + normalize (`<host>/<namespace>`, optional trailing
+  `/ubuntu` stripped, no tag) and append. Duplicates are a no-op. First add
+  materializes the seeded `cirruslabs` default ahead of the new entry.
+- `rm <registry>` — remove by registry prefix; exit 2 if absent. Removing the last
+  remaining source re-seeds the default (rusta is never sourceless).
+- `move <registry> <pos>` — move a source to 1-based priority position `<pos>`
+  (clamped); exit 2 if absent.
+
+Sources are host-independent of Tart/Apple Silicon — `rusta source` skips the
+arm64/brew/tart preflight.
+
+### 4.13 `rusta image [list | add <name> | rm <name> | move <name> <pos>]`
+
+Manage the **image names** (repositories) that rusta clones under each source. An
+image is a single OCI repository segment (e.g. `ubuntu`, `ubuntu-desktop`); the
+namespace comes from the source (§4.12). Images are a **global, ordered list**
+stored in the state file (§3.1) under `images`; list position is **priority** and
+the **first image is the `create` default**.
+
+Model and resolution rules:
+
+- **Seeded defaults.** When no images are configured, rusta behaves as if the
+  images `ubuntu` and `ubuntu-desktop` were present (in that order), with `ubuntu`
+  as the `create` default. The defaults are materialized into the state file on the
+  first mutation.
+- **Global, not per-source.** The list applies to every source. At `create` time
+  the selected image is searched across sources (so `create` makes the same number
+  of registry queries as before — the image is fixed before resolution). A source
+  that does not host the selected image is treated like a source that lacks the
+  version (skipped). `versions` walks the full source × image matrix.
+- **Selection.** `rusta create` clones the first configured image unless `--image
+  <name>` overrides it. `--image` need not be in the configured list (any valid
+  name is accepted); `--image-ref` bypasses image resolution entirely.
+
+Subactions:
+
+- `list` (default when no subaction) — print configured images in priority order,
+  marking the first as `(default)`; notes when the built-in default is in effect.
+- `add <name>` — validate (single segment: no `/`, no `:` tag, lowercase OCI
+  grammar) and append. Duplicates are a no-op. First add materializes the seeded
+  defaults ahead of the new entry.
+- `rm <name>` — remove by name; exit 2 if absent. Removing the last remaining image
+  re-seeds the defaults (rusta is never imageless).
+- `move <name> <pos>` — move an image to 1-based priority position `<pos>`
+  (clamped); exit 2 if absent.
+
+Like `rusta source`, `rusta image` skips the arm64/brew/tart preflight.
 
 ---
 
@@ -466,8 +582,9 @@ Inside the guest:
 
 ## 9. Non-goals
 
-- Non-Ubuntu guests; non-OCI Tart images; sources other than
-  `ghcr.io/cirruslabs/ubuntu`.
+- Non-Ubuntu-family guests; non-OCI Tart images; non-`ghcr.io` sources.
+- Per-source image lists and per-image attributes (provisioning, default
+  resources): images are a single global list in v1.
 - Architectures other than `arm64`.
 - Post-creation VM resize (CPU/memory/disk are set once at `create` time).
 - Snapshot, suspend/resume, export, or registry-push workflows.

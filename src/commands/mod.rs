@@ -12,9 +12,11 @@ mod default_cmd;
 mod delete;
 mod docker_setup;
 mod down;
+mod image;
 mod ip;
 mod list;
 mod set_gui;
+mod source;
 mod ssh_cmd;
 mod ssh_copy;
 mod up;
@@ -31,7 +33,7 @@ pub fn dispatch(cli: Cli) -> Result<u8> {
     // host-independent: `versions` only needs network; `completions` and
     // `man` are packaging plumbing that must run anywhere.
     match &command {
-        Cmd::Versions | Cmd::Completions(_) | Cmd::Man(_) => {}
+        Cmd::Versions(_) | Cmd::Source(_) | Cmd::Image(_) | Cmd::Completions(_) | Cmd::Man(_) => {}
         _ => preflight()?,
     }
 
@@ -41,7 +43,9 @@ pub fn dispatch(cli: Cli) -> Result<u8> {
         Cmd::Create(a) => create::run(a),
         Cmd::Delete(a) => delete::run(a),
         Cmd::List => list::run(),
-        Cmd::Versions => versions::run(),
+        Cmd::Versions(a) => versions::run(a),
+        Cmd::Source(a) => source::run(a),
+        Cmd::Image(a) => image::run(a),
         Cmd::Default(a) => default_cmd::run(a),
         Cmd::Ip(a) => ip::run(a),
         Cmd::Ssh(a) => ssh_cmd::run(a),

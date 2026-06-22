@@ -117,7 +117,9 @@ The first time you run an argument-less command with more than one VM present, `
 | `rusta create [<vm>]`          | Create and provision a new Ubuntu VM.                            |
 | `rusta delete <vm>`            | Delete a VM (requires confirmation or `--yes`).                  |
 | `rusta list`                   | List Tart VMs and indicate the current default.                  |
-| `rusta versions`               | List available Ubuntu OCI tags from `ghcr.io/cirruslabs/ubuntu`. |
+| `rusta versions`               | List available OCI tags across configured sources × images.      |
+| `rusta source [add\|rm\|move]` | Manage the image sources images are cloned from.                 |
+| `rusta image [add\|rm\|move]`  | Manage the image names (repos) cloned under each source.         |
 | `rusta default [<vm>]`         | Print or set the default VM.                                     |
 | `rusta ip [<vm>]`              | Print the guest IP of the VM.                                    |
 | `rusta ssh [<vm>] [-- cmd...]` | Open an SSH session or run a command on the VM.                  |

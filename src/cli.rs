@@ -33,8 +33,12 @@ pub enum Command {
     Delete(DeleteArgs),
     /// List Tart VMs and indicate the current default
     List,
-    /// List available Ubuntu OCI tags from ghcr.io/cirruslabs/ubuntu
-    Versions,
+    /// List available Ubuntu OCI tags across configured image sources
+    Versions(VersionsArgs),
+    /// Manage image sources (registries rusta clones Ubuntu images from)
+    Source(SourceArgs),
+    /// Manage image names (repositories rusta clones, e.g. ubuntu, ubuntu-desktop)
+    Image(ImageArgs),
     /// Print or set the default VM
     Default(DefaultArgs),
     /// Print the guest IP of the VM
@@ -121,6 +125,16 @@ pub struct CreateArgs {
     /// Run with a graphics window during provisioning (debug only)
     #[arg(long)]
     pub debug_no_headless: bool,
+    /// Image family to clone (repository name under each source), e.g.
+    /// ubuntu-desktop. Defaults to the first configured image (ubuntu).
+    #[arg(long, value_name = "NAME")]
+    pub image: Option<String>,
+    /// Clone this exact image reference, bypassing configured sources and images (one-off)
+    #[arg(long, value_name = "REF", conflicts_with_all = ["image", "source"])]
+    pub image_ref: Option<String>,
+    /// Pin resolution to a single configured source (by registry prefix or label)
+    #[arg(long, value_name = "REGISTRY")]
+    pub source: Option<String>,
 }
 
 #[derive(Args, Debug)]
@@ -131,6 +145,58 @@ pub struct DeleteArgs {
     /// Stop the VM if running, then delete
     #[arg(long)]
     pub force_running: bool,
+}
+
+#[derive(Args, Debug)]
+pub struct VersionsArgs {
+    /// Limit to a single configured source (by registry prefix or label)
+    #[arg(long, value_name = "REGISTRY")]
+    pub source: Option<String>,
+    /// Limit to a single image (repository name), e.g. ubuntu-desktop
+    #[arg(long, value_name = "NAME")]
+    pub image: Option<String>,
+}
+
+#[derive(Args, Debug)]
+pub struct SourceArgs {
+    #[command(subcommand)]
+    pub action: Option<SourceAction>,
+}
+
+#[derive(Subcommand, Debug)]
+pub enum SourceAction {
+    /// List configured sources in priority order (the default action)
+    List,
+    /// Add an image source, e.g. `ghcr.io/pallewela`
+    Add {
+        /// Registry prefix (`<host>/<namespace>`); a trailing `/ubuntu` is stripped
+        registry: String,
+    },
+    /// Remove an image source by registry prefix
+    Rm { registry: String },
+    /// Move a source to a new 1-based priority position
+    Move { registry: String, position: usize },
+}
+
+#[derive(Args, Debug)]
+pub struct ImageArgs {
+    #[command(subcommand)]
+    pub action: Option<ImageAction>,
+}
+
+#[derive(Subcommand, Debug)]
+pub enum ImageAction {
+    /// List configured images in priority order (the default action)
+    List,
+    /// Add an image name, e.g. `ubuntu-desktop`
+    Add {
+        /// Repository name under each source (a single segment; no host/namespace)
+        name: String,
+    },
+    /// Remove an image by name
+    Rm { name: String },
+    /// Move an image to a new 1-based priority position
+    Move { name: String, position: usize },
 }
 
 #[derive(Args, Debug)]
@@ -278,5 +344,99 @@ mod tests {
         let Some(Command::Delete(a)) = cli.command else { panic!() };
         assert_eq!(a.vm, "lab");
         assert!(a.yes);
+    }
+
+    #[test]
+    fn parses_create_with_image_ref_and_source() {
+        let cli = Cli::try_parse_from(["rusta", "create", "lab", "--source", "ghcr.io/pallewela"])
+            .unwrap();
+        let Some(Command::Create(a)) = cli.command else { panic!("expected create") };
+        assert_eq!(a.source.as_deref(), Some("ghcr.io/pallewela"));
+        assert!(a.image_ref.is_none());
+
+        let cli =
+            Cli::try_parse_from(["rusta", "create", "lab", "--image-ref", "ghcr.io/x/ubuntu:1"])
+                .unwrap();
+        let Some(Command::Create(a)) = cli.command else { panic!("expected create") };
+        assert_eq!(a.image_ref.as_deref(), Some("ghcr.io/x/ubuntu:1"));
+    }
+
+    #[test]
+    fn parses_create_with_image() {
+        let cli =
+            Cli::try_parse_from(["rusta", "create", "lab", "--image", "ubuntu-desktop"]).unwrap();
+        let Some(Command::Create(a)) = cli.command else { panic!("expected create") };
+        assert_eq!(a.image.as_deref(), Some("ubuntu-desktop"));
+        assert!(a.image_ref.is_none());
+    }
+
+    #[test]
+    fn create_image_ref_conflicts_with_source_and_image() {
+        assert!(Cli::try_parse_from([
+            "rusta", "create", "lab", "--image-ref", "ghcr.io/x/ubuntu:1", "--source", "ghcr.io/y",
+        ])
+        .is_err());
+        assert!(Cli::try_parse_from([
+            "rusta", "create", "lab", "--image-ref", "ghcr.io/x/ubuntu:1", "--image", "ubuntu",
+        ])
+        .is_err());
+    }
+
+    #[test]
+    fn create_image_and_source_compose() {
+        let cli = Cli::try_parse_from([
+            "rusta", "create", "lab", "--image", "ubuntu-desktop", "--source", "ghcr.io/pallewela",
+        ])
+        .unwrap();
+        let Some(Command::Create(a)) = cli.command else { panic!("expected create") };
+        assert_eq!(a.image.as_deref(), Some("ubuntu-desktop"));
+        assert_eq!(a.source.as_deref(), Some("ghcr.io/pallewela"));
+    }
+
+    #[test]
+    fn parses_versions_with_source_and_image() {
+        let cli =
+            Cli::try_parse_from(["rusta", "versions", "--source", "ghcr.io/pallewela"]).unwrap();
+        let Some(Command::Versions(a)) = cli.command else { panic!("expected versions") };
+        assert_eq!(a.source.as_deref(), Some("ghcr.io/pallewela"));
+
+        let cli = Cli::try_parse_from(["rusta", "versions", "--image", "ubuntu-desktop"]).unwrap();
+        let Some(Command::Versions(a)) = cli.command else { panic!("expected versions") };
+        assert_eq!(a.image.as_deref(), Some("ubuntu-desktop"));
+    }
+
+    #[test]
+    fn parses_image_subcommands() {
+        let cli = Cli::try_parse_from(["rusta", "image"]).unwrap();
+        let Some(Command::Image(a)) = cli.command else { panic!("expected image") };
+        assert!(a.action.is_none());
+
+        let cli = Cli::try_parse_from(["rusta", "image", "add", "ubuntu-desktop"]).unwrap();
+        let Some(Command::Image(a)) = cli.command else { panic!("expected image") };
+        assert!(
+            matches!(a.action, Some(ImageAction::Add { name }) if name == "ubuntu-desktop")
+        );
+
+        let cli = Cli::try_parse_from(["rusta", "image", "move", "ubuntu-desktop", "2"]).unwrap();
+        let Some(Command::Image(a)) = cli.command else { panic!("expected image") };
+        assert!(matches!(a.action, Some(ImageAction::Move { position, .. }) if position == 2));
+    }
+
+    #[test]
+    fn parses_source_subcommands() {
+        let cli = Cli::try_parse_from(["rusta", "source"]).unwrap();
+        let Some(Command::Source(a)) = cli.command else { panic!("expected source") };
+        assert!(a.action.is_none());
+
+        let cli = Cli::try_parse_from(["rusta", "source", "add", "ghcr.io/pallewela"]).unwrap();
+        let Some(Command::Source(a)) = cli.command else { panic!("expected source") };
+        assert!(
+            matches!(a.action, Some(SourceAction::Add { registry }) if registry == "ghcr.io/pallewela")
+        );
+
+        let cli =
+            Cli::try_parse_from(["rusta", "source", "move", "ghcr.io/pallewela", "1"]).unwrap();
+        let Some(Command::Source(a)) = cli.command else { panic!("expected source") };
+        assert!(matches!(a.action, Some(SourceAction::Move { position, .. }) if position == 1));
     }
 }

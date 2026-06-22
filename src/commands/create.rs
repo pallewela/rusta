@@ -6,6 +6,7 @@ use crate::error::{Error, Result};
 use crate::io as rio;
 use crate::paths;
 use crate::provision;
+use crate::registry;
 use crate::state;
 use crate::tart;
 
@@ -19,7 +20,17 @@ pub fn run(args: CreateArgs) -> Result<u8> {
         }
     }
 
-    let suggested = format!("ubuntu-{}", args.version.replace('.', ""));
+    // The image family to clone: an explicit `--image`, else the first
+    // configured image (seeded `ubuntu`). Ignored when `--image-ref` is given.
+    let selected_image = match args.image.as_deref() {
+        Some(i) => registry::validate_image(i)?,
+        None => state::images()
+            .into_iter()
+            .next()
+            .unwrap_or_else(|| state::DEFAULT_IMAGE.to_string()),
+    };
+
+    let suggested = format!("{}-{}", selected_image, args.version.replace('.', ""));
     let vm_name = match args.vm.clone() {
         Some(n) => n,
         None => {
@@ -41,10 +52,11 @@ pub fn run(args: CreateArgs) -> Result<u8> {
 
     let variant = if args.gui.is_some() { "desktop" } else { "server" };
     println!();
-    rio::info(&format!(
-        "Ubuntu {} — {} — Tart OCI (ghcr.io/cirruslabs/ubuntu)",
-        args.version, variant
-    ));
+    let banner = match args.image_ref.as_deref() {
+        Some(r) => format!("{r} — {variant} — Tart OCI"),
+        None => format!("{selected_image} {} — {variant} — Tart OCI", args.version),
+    };
+    rio::info(&banner);
     println!();
 
     if tart::exists(&vm_name)? {
@@ -56,15 +68,21 @@ pub fn run(args: CreateArgs) -> Result<u8> {
         if let Some(gui) = args.gui.as_deref() {
             hint.push_str(&format!(" --gui {gui}"));
         }
+        if let Some(img) = args.image.as_deref() {
+            hint.push_str(&format!(" --image {img}"));
+        }
+        if let Some(r) = args.image_ref.as_deref() {
+            hint.push_str(&format!(" --image-ref {r}"));
+        }
+        if let Some(src) = args.source.as_deref() {
+            hint.push_str(&format!(" --source {src}"));
+        }
         rio::info(&format!("To recreate: {hint}"));
         return Ok(0);
     }
 
-    rio::info(&format!(
-        "Cloning Ubuntu {} from ghcr.io/cirruslabs/ubuntu:{}...",
-        args.version, args.version
-    ));
-    let image = format!("ghcr.io/cirruslabs/ubuntu:{}", args.version);
+    let image = resolve_image(&args, &selected_image)?;
+    rio::info(&format!("Cloning {image}..."));
     tart::clone_image(&image, &vm_name)?;
     tart::set_resources(&vm_name, args.cpus, args.memory, args.disk)?;
     let _ = state::set_vm_gui(&vm_name, args.gui.is_some());
@@ -142,6 +160,60 @@ pub fn run(args: CreateArgs) -> Result<u8> {
     println!("  SSH          : rusta ssh {vm_name}");
 
     Ok(0)
+}
+
+/// Resolve the image reference to clone for the selected `image` family.
+/// Precedence:
+///   1. `--image-ref <ref>` — used verbatim.
+///   2. `--source <reg>` — pinned to a single configured source.
+///   3. all configured sources in priority order.
+///
+/// A single candidate is used directly with no registry query (preserves the
+/// offline single-source path). With two or more candidates, each source's tags
+/// are queried and the first (by priority) advertising `--version` wins;
+/// unreachable sources are skipped with a warning.
+fn resolve_image(args: &CreateArgs, image: &str) -> Result<String> {
+    if let Some(image_ref) = &args.image_ref {
+        return Ok(image_ref.clone());
+    }
+    let candidates = candidate_sources(args)?;
+    if candidates.len() == 1 {
+        return Ok(candidates[0].image_ref(image, &args.version));
+    }
+    let results: Vec<(state::Source, std::result::Result<Vec<String>, String>)> = candidates
+        .iter()
+        .map(|s| (s.clone(), registry::fetch_tags(s, image).map_err(|e| e.message)))
+        .collect();
+    let pick = registry::pick_image(image, &args.version, &results);
+    for label in &pick.warn {
+        rio::skip(&format!("source '{label}' unreachable, skipping"));
+    }
+    match pick.image {
+        Some(img) => Ok(img),
+        None => Err(Error::msg(pick.err.unwrap_or_else(|| {
+            "no configured source provided the requested version".to_string()
+        }))),
+    }
+}
+
+/// Candidate sources for resolution: a single pinned `--source`, or all
+/// configured sources in priority order.
+fn candidate_sources(args: &CreateArgs) -> Result<Vec<state::Source>> {
+    let all = state::sources();
+    match &args.source {
+        None => Ok(all),
+        Some(reg) => {
+            let norm = registry::normalize_registry(reg);
+            all.into_iter()
+                .find(|s| s.registry == norm || s.label() == reg.as_str())
+                .map(|s| vec![s])
+                .ok_or_else(|| {
+                    Error::msg(format!(
+                        "source '{reg}' is not configured (run `rusta source add {reg}` or see `rusta source list`)"
+                    ))
+                })
+        }
+    }
 }
 
 /// Interactively prompt for a VM name, offering `suggested` as the default.
