@@ -4,7 +4,15 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.1] - 2026-06-27
+
+### Dependencies
+- Bump taiki-e/install-action from 2.82.0 to 2.82.5 (#57) ([32f7566](https://github.com/pallewela/rusta/commit/32f7566a52591c6728a6f5b172457b7e9d8911ba))
+
 ## [1.3.0] - 2026-06-22
+
+### Documentation
+- Release v1.3.0 [skip release] ([9774e58](https://github.com/pallewela/rusta/commit/9774e587a9d587c78f7c033e9f06fc1052364e30))
 
 ### Features
 - Configurable image sources and image names [bump:minor] (#56) ([edd1d38](https://github.com/pallewela/rusta/commit/edd1d3807edebc288bfac019be54a60b558dbc31))
