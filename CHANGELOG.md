@@ -4,6 +4,15 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.4] - 2026-07-18
+
+### Dependencies
+- Bump github/codeql-action/upload-sarif from 4.37.0 to 4.37.1 (#71) ([6b5aa4e](https://github.com/pallewela/rusta/commit/6b5aa4e68196a881696ceed719766a710710f9fa))
+- Bump taiki-e/install-action from 2.83.1 to 2.83.4 (#72) ([fbeba51](https://github.com/pallewela/rusta/commit/fbeba51140f87cd295d8a210377df955ad6b1c69))
+- Bump the cargo-minor-and-patch group with 2 updates (#69) ([cfc061b](https://github.com/pallewela/rusta/commit/cfc061bb54b420900875ae1f4480bfbdde778c83))
+- Bump softprops/action-gh-release from 3.0.1 to 3.0.2 (#67) ([fbb11d7](https://github.com/pallewela/rusta/commit/fbb11d79223e1b2849d558e0d0f960c936683ce8))
+- Bump github/codeql-action/analyze from 4.37.0 to 4.37.1 (#68) ([0235bd9](https://github.com/pallewela/rusta/commit/0235bd90384bc8f7ffcc6518753f479eb39b29d4))
+
 ## [1.3.3] - 2026-07-11
 
 ### Dependencies
@@ -11,6 +20,9 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Bump taiki-e/install-action from 2.82.8 to 2.83.1 (#65) ([561c07d](https://github.com/pallewela/rusta/commit/561c07d27406476e871bcca9402884d22b9f5ae3))
 - Bump github/codeql-action/upload-sarif from 4.36.3 to 4.37.0 (#64) ([36cc2ca](https://github.com/pallewela/rusta/commit/36cc2ca2aa342eba94d16cc89ec88349b0286469))
 - Bump github/codeql-action/analyze from 4.36.3 to 4.37.0 (#63) ([7ad6ea5](https://github.com/pallewela/rusta/commit/7ad6ea597d9a356af1cc16dbe8c07f26dd59d4bd))
+
+### Documentation
+- Release v1.3.3 [skip release] ([bcaa4a6](https://github.com/pallewela/rusta/commit/bcaa4a6670dd7b53eaae9acac157dab7ecfc6cde))
 
 ## [1.3.2] - 2026-07-04
 
