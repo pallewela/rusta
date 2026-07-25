@@ -4,6 +4,17 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.5] - 2026-07-25
+
+### Dependencies
+- Bump taiki-e/install-action from 2.83.4 to 2.85.0 (#78) ([6ac1308](https://github.com/pallewela/rusta/commit/6ac13085d2f2a28b4c7aa51b4b22c6f547b2d99b))
+- Bump github/codeql-action/upload-sarif from 4.37.1 to 4.37.3 (#79) ([a5953b2](https://github.com/pallewela/rusta/commit/a5953b2d2f9eb0671f9060f4a3b1112ff7ee49f6))
+- Bump github/codeql-action/init from 4.37.0 to 4.37.3 (#75) ([c7b95ac](https://github.com/pallewela/rusta/commit/c7b95acb5136585938abbf6dab8dea72c8d93323))
+- Bump the cargo-minor-and-patch group with 4 updates (#76) ([88e1ce3](https://github.com/pallewela/rusta/commit/88e1ce3b944052e36fb565e8967b90d1e3482ee3))
+- Bump github/codeql-action/analyze from 4.37.1 to 4.37.3 (#77) ([d492004](https://github.com/pallewela/rusta/commit/d4920041788e293b04af4e026e04153a24c3e4c0))
+- Bump actions/checkout from 7.0.0 to 7.0.1 (#74) ([6d0b25e](https://github.com/pallewela/rusta/commit/6d0b25ee5d9444ef3ecf6b9dc709715d9bf24016))
+- Bump ossf/scorecard-action from 2.4.3 to 2.4.4 (#73) ([c6632ec](https://github.com/pallewela/rusta/commit/c6632ecdf657853bfd002014c21e33e6a48fe125))
+
 ## [1.3.4] - 2026-07-18
 
 ### Dependencies
@@ -12,6 +23,9 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Bump the cargo-minor-and-patch group with 2 updates (#69) ([cfc061b](https://github.com/pallewela/rusta/commit/cfc061bb54b420900875ae1f4480bfbdde778c83))
 - Bump softprops/action-gh-release from 3.0.1 to 3.0.2 (#67) ([fbb11d7](https://github.com/pallewela/rusta/commit/fbb11d79223e1b2849d558e0d0f960c936683ce8))
 - Bump github/codeql-action/analyze from 4.37.0 to 4.37.1 (#68) ([0235bd9](https://github.com/pallewela/rusta/commit/0235bd90384bc8f7ffcc6518753f479eb39b29d4))
+
+### Documentation
+- Release v1.3.4 [skip release] ([79b13fa](https://github.com/pallewela/rusta/commit/79b13fad9a52369a21a43fc8b515e0a71e499cb0))
 
 ## [1.3.3] - 2026-07-11
 
