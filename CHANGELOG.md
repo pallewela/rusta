@@ -4,10 +4,18 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.7] - 2026-08-01
+
+### Dependencies
+- Bump taiki-e/install-action from 2.85.0 to 2.85.4 (#81) ([8d2346b](https://github.com/pallewela/rusta/commit/8d2346b57fdf1c5eb3f0c6e978be232f27c9373d))
+
 ## [1.3.6] - 2026-08-01
 
 ### Dependencies
 - Bump the cargo-minor-and-patch group with 2 updates (#80) ([41e30ab](https://github.com/pallewela/rusta/commit/41e30ab71e1099e885fb8032e4ee080f1019cb1d))
+
+### Documentation
+- Release v1.3.6 [skip release] ([e766cef](https://github.com/pallewela/rusta/commit/e766cef092cc444416d144eb4b454c887e4475f0))
 
 ## [1.3.5] - 2026-07-25
 
