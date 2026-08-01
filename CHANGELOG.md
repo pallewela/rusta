@@ -4,6 +4,11 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.6] - 2026-08-01
+
+### Dependencies
+- Bump the cargo-minor-and-patch group with 2 updates (#80) ([41e30ab](https://github.com/pallewela/rusta/commit/41e30ab71e1099e885fb8032e4ee080f1019cb1d))
+
 ## [1.3.5] - 2026-07-25
 
 ### Dependencies
@@ -14,6 +19,9 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Bump github/codeql-action/analyze from 4.37.1 to 4.37.3 (#77) ([d492004](https://github.com/pallewela/rusta/commit/d4920041788e293b04af4e026e04153a24c3e4c0))
 - Bump actions/checkout from 7.0.0 to 7.0.1 (#74) ([6d0b25e](https://github.com/pallewela/rusta/commit/6d0b25ee5d9444ef3ecf6b9dc709715d9bf24016))
 - Bump ossf/scorecard-action from 2.4.3 to 2.4.4 (#73) ([c6632ec](https://github.com/pallewela/rusta/commit/c6632ecdf657853bfd002014c21e33e6a48fe125))
+
+### Documentation
+- Release v1.3.5 [skip release] ([74058e1](https://github.com/pallewela/rusta/commit/74058e13c452c7862d3e8cde830e24b3b620cafb))
 
 ## [1.3.4] - 2026-07-18
 
