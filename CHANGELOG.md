@@ -4,12 +4,20 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.10] - 2026-08-15
+
+### Dependencies
+- Bump the cargo-minor-and-patch group with 3 updates (#87) ([fe46971](https://github.com/pallewela/rusta/commit/fe46971e1ffc3dc89ee782cf48725a2041ae5f33))
+
 ## [1.3.9] - 2026-08-08
 
 ### Dependencies
 - Bump github/codeql-action/analyze from 4.37.3 to 4.37.6 (#86) ([b6133fe](https://github.com/pallewela/rusta/commit/b6133fed662c7599e777e727458bcd322bf936fd))
 - Bump github/codeql-action/upload-sarif from 4.37.3 to 4.37.6 (#85) ([4f6eaa7](https://github.com/pallewela/rusta/commit/4f6eaa73b6e552f0e35e662e56bd25ebeda7f7ff))
 - Bump github/codeql-action/init from 4.37.3 to 4.37.6 (#84) ([dd4f631](https://github.com/pallewela/rusta/commit/dd4f6315b5b15d22a8b068610d79aa7cbe3338b8))
+
+### Documentation
+- Release v1.3.9 [skip release] ([51368e4](https://github.com/pallewela/rusta/commit/51368e42e0581c9ed23042c120ed183629693433))
 
 ## [1.3.8] - 2026-08-08
 
