@@ -4,10 +4,19 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.11] - 2026-08-15
+
+### Dependencies
+- Bump Swatinem/rust-cache (#89) ([3411ae1](https://github.com/pallewela/rusta/commit/3411ae1c5ff163f8c925f577bf93f62a096160c7))
+- Bump taiki-e/install-action from 2.85.8 to 2.85.12 (#88) ([e5db4b4](https://github.com/pallewela/rusta/commit/e5db4b4ae3e5f8d31f937745da56aca03bdb736a))
+
 ## [1.3.10] - 2026-08-15
 
 ### Dependencies
 - Bump the cargo-minor-and-patch group with 3 updates (#87) ([fe46971](https://github.com/pallewela/rusta/commit/fe46971e1ffc3dc89ee782cf48725a2041ae5f33))
+
+### Documentation
+- Release v1.3.10 [skip release] ([7d37ccc](https://github.com/pallewela/rusta/commit/7d37cccaea2ddef6ea3d7a00ecb64ce0a7b7c045))
 
 ## [1.3.9] - 2026-08-08
 
