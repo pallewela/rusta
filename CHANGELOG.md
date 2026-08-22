@@ -4,12 +4,21 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.13] - 2026-08-22
+
+### Dependencies
+- Bump github/codeql-action/init from 4.37.6 to 4.37.7 (#93) ([840fceb](https://github.com/pallewela/rusta/commit/840fcebf5be2a7e7106be08805e24acf36ecdac8))
+
 ## [1.3.12] - 2026-08-22
 
 ### Dependencies
+- Bump taiki-e/install-action from 2.85.12 to 2.86.3 (#94) ([ad93768](https://github.com/pallewela/rusta/commit/ad937687621431cc3010ca8c230363d63324f96d))
 - Bump Swatinem/rust-cache (#92) ([fbc186e](https://github.com/pallewela/rusta/commit/fbc186e5bdeee875041964175d9e5834bba6062f))
 - Bump github/codeql-action/upload-sarif from 4.37.6 to 4.37.7 (#91) ([7adc78b](https://github.com/pallewela/rusta/commit/7adc78bdf1686635fba050ee95374855371ba7d4))
 - Bump clap_mangen in the cargo-minor-and-patch group (#90) ([213b49f](https://github.com/pallewela/rusta/commit/213b49fcc04909dbae71132ed920d70fcc52fea4))
+
+### Documentation
+- Release v1.3.12 [skip release] ([ab60da9](https://github.com/pallewela/rusta/commit/ab60da96e219325302b4f0a1a79b063ed27f0ed6))
 
 ## [1.3.11] - 2026-08-15
 
