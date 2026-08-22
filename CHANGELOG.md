@@ -4,10 +4,18 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.14] - 2026-08-22
+
+### Dependencies
+- Bump github/codeql-action/analyze from 4.37.6 to 4.37.7 (#95) ([9e4226b](https://github.com/pallewela/rusta/commit/9e4226bddbead235bca601f906332cfd58436c83))
+
 ## [1.3.13] - 2026-08-22
 
 ### Dependencies
 - Bump github/codeql-action/init from 4.37.6 to 4.37.7 (#93) ([840fceb](https://github.com/pallewela/rusta/commit/840fcebf5be2a7e7106be08805e24acf36ecdac8))
+
+### Documentation
+- Release v1.3.13 [skip release] ([1b90e99](https://github.com/pallewela/rusta/commit/1b90e994fe7f8366005e3c195df8e2f7d55183ef))
 
 ## [1.3.12] - 2026-08-22
 
