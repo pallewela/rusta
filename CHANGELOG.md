@@ -4,10 +4,20 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.16] - 2026-08-29
+
+### Dependencies
+- Bump taiki-e/install-action from 2.86.3 to 2.86.8 (#99) ([1da4c9b](https://github.com/pallewela/rusta/commit/1da4c9b4e4e0c72de5c73f3ddba1db112f4fa345))
+- Bump github/codeql-action/upload-sarif from 4.37.7 to 4.37.9 (#98) ([a24076d](https://github.com/pallewela/rusta/commit/a24076d079b50e9fd54a6bd828b656ec1a2ea9e7))
+- Bump github/codeql-action/init from 4.37.7 to 4.37.9 (#97) ([cf15947](https://github.com/pallewela/rusta/commit/cf1594767ebf800d4ab0ff9c2b8785d108238c16))
+
 ## [1.3.15] - 2026-08-29
 
 ### Dependencies
 - Bump github/codeql-action/analyze from 4.37.7 to 4.37.9 (#96) ([bf773c8](https://github.com/pallewela/rusta/commit/bf773c8b660c4cded62d63a90676b6c777c782e6))
+
+### Documentation
+- Release v1.3.15 [skip release] ([0bf16b1](https://github.com/pallewela/rusta/commit/0bf16b1f53a201603d8e81c3dae67a8595c361c7))
 
 ## [1.3.14] - 2026-08-22
 
