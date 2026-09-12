@@ -4,6 +4,15 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.18] - 2026-09-12
+
+### Dependencies
+- Bump github/codeql-action/upload-sarif from 4.37.9 to 4.38.0 (#108) ([4bb1bd1](https://github.com/pallewela/rusta/commit/4bb1bd14cabeab7b07d277b99325d109f27ebd1d))
+- Bump taiki-e/install-action from 2.87.4 to 2.87.9 (#107) ([93f43a5](https://github.com/pallewela/rusta/commit/93f43a58e2cfb22de9395aa897a65771a45ef776))
+- Bump github/codeql-action/analyze from 4.37.9 to 4.38.0 (#106) ([0e7c575](https://github.com/pallewela/rusta/commit/0e7c575eb1e513296b05b9a38bfe4ffa7f406a0e))
+- Bump github/codeql-action/init from 4.37.9 to 4.38.0 (#105) ([71fd562](https://github.com/pallewela/rusta/commit/71fd5624939b0e3b27a19154df845999501526ae))
+- Bump toml in the cargo-minor-and-patch group (#104) ([e23e266](https://github.com/pallewela/rusta/commit/e23e26693ad9555c1aef3760e9c07ac51e6f96cc))
+
 ## [1.3.17] - 2026-09-05
 
 ### Dependencies
@@ -11,6 +20,9 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Bump actions/deploy-pages from 5.0.0 to 5.0.1 (#102) ([8cdc89a](https://github.com/pallewela/rusta/commit/8cdc89a311391d227c7756ed49e2a67e82a1dc5a))
 - Bump softprops/action-gh-release from 3.0.2 to 3.0.3 (#101) ([91e26c5](https://github.com/pallewela/rusta/commit/91e26c5b044879a2ecc49b98228d53647c556051))
 - Bump orhun/git-cliff-action from 4.8.0 to 4.9.0 (#100) ([6b60c40](https://github.com/pallewela/rusta/commit/6b60c404fb8ba437058dd2e39b9c0515e7b4c6a8))
+
+### Documentation
+- Release v1.3.17 [skip release] ([fa41e5b](https://github.com/pallewela/rusta/commit/fa41e5bbf9b7e7a5c22690172cfadc7f01cac632))
 
 ## [1.3.16] - 2026-08-29
 
