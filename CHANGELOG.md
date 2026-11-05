@@ -4,6 +4,11 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.19] - 2026-11-05
+
+### Dependencies
+- Bump codecov/codecov-action from 7.0.0 to 7.1.1 (#111) ([0aa388b](https://github.com/pallewela/rusta/commit/0aa388b4f801df2e60b89a67321c741ec871bc1d))
+
 ## [1.3.18] - 2026-09-12
 
 ### Dependencies
@@ -12,6 +17,9 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Bump github/codeql-action/analyze from 4.37.9 to 4.38.0 (#106) ([0e7c575](https://github.com/pallewela/rusta/commit/0e7c575eb1e513296b05b9a38bfe4ffa7f406a0e))
 - Bump github/codeql-action/init from 4.37.9 to 4.38.0 (#105) ([71fd562](https://github.com/pallewela/rusta/commit/71fd5624939b0e3b27a19154df845999501526ae))
 - Bump toml in the cargo-minor-and-patch group (#104) ([e23e266](https://github.com/pallewela/rusta/commit/e23e26693ad9555c1aef3760e9c07ac51e6f96cc))
+
+### Documentation
+- Release v1.3.18 [skip release] ([5f02b64](https://github.com/pallewela/rusta/commit/5f02b648e832ac492a83916a4bcb2867ab41a2c1))
 
 ## [1.3.17] - 2026-09-05
 
