@@ -4,10 +4,18 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.20] - 2026-11-05
+
+### Dependencies
+- Bump taiki-e/install-action from 2.87.9 to 2.87.19 (#112) ([2d26186](https://github.com/pallewela/rusta/commit/2d261867488aa88e206908abac69eaf0de267b90))
+
 ## [1.3.19] - 2026-11-05
 
 ### Dependencies
 - Bump codecov/codecov-action from 7.0.0 to 7.1.1 (#111) ([0aa388b](https://github.com/pallewela/rusta/commit/0aa388b4f801df2e60b89a67321c741ec871bc1d))
+
+### Documentation
+- Release v1.3.19 [skip release] ([eddb79d](https://github.com/pallewela/rusta/commit/eddb79d625b81cd3ccbcaf5420415739a64ce8ec))
 
 ## [1.3.18] - 2026-09-12
 
