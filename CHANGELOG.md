@@ -4,10 +4,19 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.21] - 2026-11-05
+
+### Dependencies
+- Update CodeQL init and analyze to 4.38.1 (#114) ([b317d39](https://github.com/pallewela/rusta/commit/b317d39ed92b3ff19fb579f8111284e0285abcd3))
+- Bump orhun/git-cliff-action from 4.9.0 to 4.9.1 (#113) ([1e7477e](https://github.com/pallewela/rusta/commit/1e7477e796cf06e30c1214c8c1fbb9fb8b8e180c))
+
 ## [1.3.20] - 2026-11-05
 
 ### Dependencies
 - Bump taiki-e/install-action from 2.87.9 to 2.87.19 (#112) ([2d26186](https://github.com/pallewela/rusta/commit/2d261867488aa88e206908abac69eaf0de267b90))
+
+### Documentation
+- Release v1.3.20 [skip release] ([60f4d46](https://github.com/pallewela/rusta/commit/60f4d467e6c3cb4e016b331c98bb5fcf30549fb4))
 
 ## [1.3.19] - 2026-11-05
 
