@@ -4,11 +4,19 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.22] - 2026-11-05
+
+### Dependencies
+- Bump the cargo-minor-and-patch group across 1 directory with 5 updates (#117) ([6941fa4](https://github.com/pallewela/rusta/commit/6941fa43d6468fee6c99dca976df2e2a03b52f99))
+
 ## [1.3.21] - 2026-11-05
 
 ### Dependencies
 - Update CodeQL init and analyze to 4.38.1 (#114) ([b317d39](https://github.com/pallewela/rusta/commit/b317d39ed92b3ff19fb579f8111284e0285abcd3))
 - Bump orhun/git-cliff-action from 4.9.0 to 4.9.1 (#113) ([1e7477e](https://github.com/pallewela/rusta/commit/1e7477e796cf06e30c1214c8c1fbb9fb8b8e180c))
+
+### Documentation
+- Release v1.3.21 [skip release] ([0a64c9e](https://github.com/pallewela/rusta/commit/0a64c9e0d58c485915d6f778c1b34866c3cac932))
 
 ## [1.3.20] - 2026-11-05
 
