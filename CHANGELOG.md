@@ -4,10 +4,22 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.23] - 2026-11-07
+
+### Dependencies
+- Bump the cargo-minor-and-patch group with 2 updates (#122) ([9404e65](https://github.com/pallewela/rusta/commit/9404e657f514acc0e193ab147a13b7fa372a00b0))
+- Bump actions/download-artifact from 8.0.1 to 8.0.2 (#123) ([d2bc5ad](https://github.com/pallewela/rusta/commit/d2bc5adf8606e0ed28a2a38838b0933ac9aa76a9))
+- Bump Swatinem/rust-cache (#120) ([49f37df](https://github.com/pallewela/rusta/commit/49f37df9ef693d4d32ea8993cccfe9a374796077))
+- Bump github/codeql-action/analyze from 4.38.1 to 4.39.3 (#121) ([39b3617](https://github.com/pallewela/rusta/commit/39b36175bab5f1a9f803cf97901d4fc97917f76a))
+- Bump ossf/scorecard-action from 2.4.4 to 2.5.0 (#119) ([25ff76a](https://github.com/pallewela/rusta/commit/25ff76ad9817031d16efb556c198b8a9d04edc7a))
+
 ## [1.3.22] - 2026-11-05
 
 ### Dependencies
 - Bump the cargo-minor-and-patch group across 1 directory with 5 updates (#117) ([6941fa4](https://github.com/pallewela/rusta/commit/6941fa43d6468fee6c99dca976df2e2a03b52f99))
+
+### Documentation
+- Release v1.3.22 [skip release] ([4250094](https://github.com/pallewela/rusta/commit/4250094c7877bcc102dac0426272f73317a55507))
 
 ## [1.3.21] - 2026-11-05
 
