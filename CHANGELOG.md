@@ -4,6 +4,15 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.24] - 2026-11-14
+
+### Dependencies
+- Bump github/codeql-action/upload-sarif from 4.38.0 to 4.39.3 (#128) ([f09fa52](https://github.com/pallewela/rusta/commit/f09fa52496d5a2466f3029b35ce7e94ee5e99766))
+- Bump softprops/action-gh-release from 3.0.3 to 3.0.4 (#127) ([14f5f6c](https://github.com/pallewela/rusta/commit/14f5f6c17b4863bfa843a7875e87c517b9cda6e4))
+- Bump actions/upload-artifact from 7.0.1 to 7.0.2 (#124) ([3a28c04](https://github.com/pallewela/rusta/commit/3a28c0427e8087e12fa9df3fb0f5c28decae655a))
+- Bump github/codeql-action/init from 4.38.1 to 4.39.3 (#126) ([79202c8](https://github.com/pallewela/rusta/commit/79202c874a6fdedeaafaf30efe5e86f62932d3d3))
+- Bump toml (#125) ([3e963b1](https://github.com/pallewela/rusta/commit/3e963b1f6ff64f4bba8bd08afbdc99e02b04e842))
+
 ## [1.3.23] - 2026-11-07
 
 ### Dependencies
@@ -12,6 +21,9 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Bump Swatinem/rust-cache (#120) ([49f37df](https://github.com/pallewela/rusta/commit/49f37df9ef693d4d32ea8993cccfe9a374796077))
 - Bump github/codeql-action/analyze from 4.38.1 to 4.39.3 (#121) ([39b3617](https://github.com/pallewela/rusta/commit/39b36175bab5f1a9f803cf97901d4fc97917f76a))
 - Bump ossf/scorecard-action from 2.4.4 to 2.5.0 (#119) ([25ff76a](https://github.com/pallewela/rusta/commit/25ff76ad9817031d16efb556c198b8a9d04edc7a))
+
+### Documentation
+- Release v1.3.23 [skip release] ([94f29cb](https://github.com/pallewela/rusta/commit/94f29cb70023eeac208962972a9c97af4033bdea))
 
 ## [1.3.22] - 2026-11-05
 
