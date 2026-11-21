@@ -4,6 +4,13 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.25] - 2026-11-21
+
+### Dependencies
+- Bump the cargo-minor-and-patch group with 3 updates (#129) ([9d3e1cd](https://github.com/pallewela/rusta/commit/9d3e1cd968a36f33cdabf30c96c233076dc74dac))
+- Bump taiki-e/install-action from 2.87.19 to 2.90.5 (#131) ([51f6288](https://github.com/pallewela/rusta/commit/51f6288cc44301519cb87c365b6ff2eea93c23f3))
+- Bump Swatinem/rust-cache (#130) ([69adf8e](https://github.com/pallewela/rusta/commit/69adf8ea88d3e25b99dcb3ef30c7e5f3ea9b882f))
+
 ## [1.3.24] - 2026-11-14
 
 ### Dependencies
@@ -12,6 +19,9 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Bump actions/upload-artifact from 7.0.1 to 7.0.2 (#124) ([3a28c04](https://github.com/pallewela/rusta/commit/3a28c0427e8087e12fa9df3fb0f5c28decae655a))
 - Bump github/codeql-action/init from 4.38.1 to 4.39.3 (#126) ([79202c8](https://github.com/pallewela/rusta/commit/79202c874a6fdedeaafaf30efe5e86f62932d3d3))
 - Bump toml (#125) ([3e963b1](https://github.com/pallewela/rusta/commit/3e963b1f6ff64f4bba8bd08afbdc99e02b04e842))
+
+### Documentation
+- Release v1.3.24 [skip release] ([1d6fc03](https://github.com/pallewela/rusta/commit/1d6fc0355c89716d3ca6c01fec49a1d93c009cbe))
 
 ## [1.3.23] - 2026-11-07
 
